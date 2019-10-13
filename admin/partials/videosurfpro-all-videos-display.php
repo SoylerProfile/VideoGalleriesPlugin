@@ -57,6 +57,7 @@ $all_videos = Videosurfpro_Video::get_all_videos();
 
 <h1>All VIDEOS</h1>
 
+<!--    FILTER    -->
 <div id="videosurfpro-videos-filter">
     <div class="videosurfpro-videos-filter-element">
         <span><?php echo count($all_videos); ?> Videos</span>
@@ -67,6 +68,23 @@ $all_videos = Videosurfpro_Video::get_all_videos();
     </div>
 </div>
 
+<!--    PAGINATION    -->
+<?php
+//
+//$items_on_page = 3;
+//$pages = floor(count($all_videos) / $items_on_page);
+//$current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+//
+//?>
+<!--<nav>-->
+<!--    <ul>-->
+<!--        --><?php //for($i=1; $i <= $pages; $i++) : ?>
+<!--            <li><a href="?page=videosurfpro_submenu_all_videos&paged=--><?//=$i?><!--">--><?//=$i?><!--</a></li>-->
+<!--        --><?php //endfor ?>
+<!--    </ul>-->
+<!--</nav>-->
+
+<!--    VIDEOS    -->
 <div id="videosurfpro-all-videos-container">
     <hr>
     <?php foreach($all_videos as $video) : ?>
@@ -99,3 +117,13 @@ $all_videos = Videosurfpro_Video::get_all_videos();
         <hr>
     <?php endforeach;?>
 </div>
+
+<?php
+
+$site_url = get_site_url();
+
+?>
+
+<iframe id="ytplayer" type="text/html" width="640" height="360"
+        src="http://www.youtube.com/embed/QenoWthH2NQ?autoplay=1&origin=<?=$site_url?>"
+        frameborder="0"/>
