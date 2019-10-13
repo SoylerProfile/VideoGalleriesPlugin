@@ -19,10 +19,10 @@ if(isset($_POST['submit'])) {
     $video_description = $_POST['video_description'];
     $video_link = $_POST['video_link'];
     $video_id = $_POST['video_id'];
-    $video_provider = 1;                          // сделать динамическим
+    $video_provider = $_POST['video_provider'];
     $video_category = $_POST['video_category'];
-    $video_author_id = 1;                         // сделать динамическим
-    $video_created_at = '10.10.2019';             // сделать динамическим
+    $video_author_id = get_current_user_id();
+    $video_created_at = date("m.d.y");
     $video_seo_title = $_POST['video_seo_title'];
     $video_seo_description = $_POST['video_seo_description'];
     $video_seo_keywords = $_POST['video_seo_keywords'];
@@ -45,15 +45,11 @@ if(isset($_POST['submit'])) {
 <h1>YouTube</h1>
 
 <form action="" method="post">
-    <div>Video Name: <input type="text" name="video_name" required></div>
-    <div>Video Description: <input type="text" name="video_description" required></div>
-    <div>Link: <input type="text" name="video_link" required></div>
-    <div>Video ID: <input type="text" name="video_id" required></div>
-    <div>Video Provider <input type="text" name="video_provider" required></div>
-    <div>Video ID: <input type="text" name="video_category" required></div>
-    <div>Video Author: <input type="text" name="video_author" required></div>
-    <div>Video SEO TITLE: <input type="text" name="video_seo_title" required></div>
-    <div>Video SEO DESCRIPTION: <input type="text" name="video_seo_description" required></div>
-    <div>Video SEO KEYWORDS: <input type="text" name="video_seo_keywords" required></div>
+    <input type="hidden" name="video_provider" value="YouTube" required>
+    <div>Link: <input type="text" name="video_link" value="1" required></div>
+    <div>Video Category: <input type="text" name="video_category" value="1" required></div>
+    <div>Video SEO TITLE: <input type="text" name="video_seo_title" value="1" required></div>
+    <div>Video SEO DESCRIPTION: <input type="text" name="video_seo_description" value="1" required></div>
+    <div>Video SEO KEYWORDS: <input type="text" name="video_seo_keywords" value="1" required></div>
     <div><input name='submit' type="submit" value="Добавить"></div>
 </form>

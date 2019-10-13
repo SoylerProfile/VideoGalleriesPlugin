@@ -3,6 +3,9 @@
 namespace admin\classes;
 
 require __DIR__ . '/../../config.php';
+require __DIR__ . '/../../libraries/YouTubeAPI/class-video-data-getter.php';
+
+use libraries\YouTubeAPI\DataGetter;
 
 class Videosurfpro_Video
 {
@@ -32,6 +35,8 @@ class Videosurfpro_Video
         $this->video_seo_title = $video_seo_title;
         $this->video_seo_description = $video_seo_description;
         $this->video_seo_keywords = $video_seo_keywords;
+
+        $this->get_video_data();
     }
 
     public function add_video() {
@@ -58,12 +63,10 @@ class Videosurfpro_Video
                 ),
                 array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',)
             );
-
             return true;
         }
         else {
             // code if data is not ok
-
             return false;
         }
     }
@@ -74,6 +77,18 @@ class Videosurfpro_Video
         if ($this->video_id == null)
             return false;
         return true;
+    }
+
+    private function get_video_data() {
+        $youtube_video_data_getter = new DataGetter();
+        // get DATA
+        $video_data = $youtube_video_data_getter->get_video_data('VcV1azXN_Fc');
+        // set DATA
+        $this->video_name = $video_data['items'][0]['snippet']['title'];
+        $this->video_description = $video_data['items'][0]['snippet']['description'];
+        $this->video_id = $video_data['items'][0]['id'];
+        $this->video_provider = 'YouTube'; // тут нужно будет подумать как работать без привязок к объектам или получать в форме провайдера
+        $this->video_created_at = $video_data['items'][0]['snippet']['publishedAt'];
     }
 
 }
