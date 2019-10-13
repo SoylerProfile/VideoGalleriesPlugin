@@ -1,0 +1,10 @@
+#videosurfpro-all-videos-container {
+    margin: 25px;
+    margin-left: 0;
+    background-color: #ffffff;
+    text-align: center;
+}
+.videosurfpro-single-video-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr 1fr 1fr 1fr 1fr;
+}

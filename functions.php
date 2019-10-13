@@ -60,3 +60,8 @@ function videosurfpro_display_submenu_faq() {
 }
 
 // ------------------------------------------------------------ //
+
+function videosurfpro_enqueue_scripts() {
+//    wp_enqueue_style('videosurfpro-admin-style', plugins_url('/admin/css/videosurfpro-admin-style.css', __FILE__));
+
+}

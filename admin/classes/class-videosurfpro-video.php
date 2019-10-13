@@ -82,7 +82,7 @@ class Videosurfpro_Video
     private function get_video_data() {
         $youtube_video_data_getter = new DataGetter();
         // get DATA
-        $video_data = $youtube_video_data_getter->get_video_data('VcV1azXN_Fc');
+        $video_data = $youtube_video_data_getter->get_video_data($this->video_link);
         // set DATA
         $this->video_name = $video_data['items'][0]['snippet']['title'];
         $this->video_description = $video_data['items'][0]['snippet']['description'];
@@ -91,4 +91,12 @@ class Videosurfpro_Video
         $this->video_created_at = $video_data['items'][0]['snippet']['publishedAt'];
     }
 
+    public static function get_all_videos() {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $current_user_id = get_current_user_id();
+        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id";
+        $all_videos = $wpdb->get_results($sql);
+        return $all_videos;
+    }
 }

@@ -18,7 +18,7 @@ register_activation_hook( __FILE__, 'videosurfpro_activation' );
 register_uninstall_hook(__FILE__, 'videosurfpro_uninstall');
 
 // Подключаем скрипты до сайта
-add_action('wp_enqueue_scripts', 'videosurfpro_scripts');
+add_action('wp_enqueue_scripts', 'videosurfpro_enqueue_scripts');
 
 // Подключаем скрипты до админки WordPress
 add_action('admin_head', 'videosurfpro_admin_scripts');

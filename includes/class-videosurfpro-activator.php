@@ -27,6 +27,7 @@ class Videosurfpro_Activator {
               video_provider varchar(1024),
               video_category varchar(1024),
               video_author_id varchar(1024),
+              video_is_published varchar(1024) default 'FALSE',
               video_created_at varchar(1024),
               video_seo_title varchar(1024),
               video_seo_description varchar(1024),
