@@ -4,6 +4,8 @@ namespace includes;
 
 // I think, that the class will be static
 
+// TODO Remove it.
+
 class Videosurfpro_Database
 {
     // нужно подумать как определять сколько данных будет приходить и с каким типом

@@ -15,4 +15,4 @@
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 
-<h1>All Galleries</h1>
+<h1>All Galleries</h1>2

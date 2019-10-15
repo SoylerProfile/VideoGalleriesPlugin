@@ -46,6 +46,9 @@ if(isset($_POST['submit'])) {
 
 <form action="" method="post">
     <input type="hidden" name="video_provider" value="YouTube" required>
+    <div><input type="hidden" name="video_name" value="1" required></div>
+    <div><input type="hidden" name="video_description" value="1" required></div>
+    <div><input type="hidden" name="video_id" value="1" required></div>
     <div>Link: <input type="text" name="video_link" value="1" required></div>
     <div>Video Category: <input type="text" name="video_category" value="1" required></div>
     <div>Video SEO TITLE: <input type="text" name="video_seo_title" value="1" required></div>

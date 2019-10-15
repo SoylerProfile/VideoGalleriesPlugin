@@ -2,7 +2,7 @@
 
 namespace admin\classes;
 
-require __DIR__ . '/../../config.php';
+//require __DIR__ . '/../../config.php';
 require __DIR__ . '/../../libraries/YouTubeAPI/class-video-data-getter.php';
 
 use libraries\YouTubeAPI\DataGetter;
@@ -88,7 +88,6 @@ class Videosurfpro_Video
         $this->video_description = $video_data['items'][0]['snippet']['description'];
         $this->video_id = $video_data['items'][0]['id'];
         $this->video_provider = 'YouTube'; // тут нужно будет подумать как работать без привязок к объектам или получать в форме провайдера
-        $this->video_created_at = $video_data['items'][0]['snippet']['publishedAt'];
     }
 
     public static function get_all_videos() {
@@ -98,5 +97,38 @@ class Videosurfpro_Video
         $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id";
         $all_videos = $wpdb->get_results($sql);
         return $all_videos;
+    }
+
+    public static function get_videos_with_pagination($current_page, $items_on_page) {
+        $start = ($current_page * $items_on_page) - $items_on_page;
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $current_user_id = get_current_user_id();
+        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id LIMIT $start,$items_on_page";
+        $all_videos = $wpdb->get_results($sql);
+        return $all_videos;
+    }
+
+    public static function search_videos($text) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $current_user_id = get_current_user_id();
+        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id AND `video_name` LIKE '%".$text."%'";
+        $all_videos = $wpdb->get_results($sql);
+        return $all_videos;
+    }
+
+    public function print_all_data() {
+        echo 'video_name - ' . $this->video_name . "<br>";
+        echo 'video_description - ' . $this->video_description . "<br>";
+        echo 'video_link - ' . $this->video_link . "<br>";
+        echo 'video_id - ' . $this->video_id . "<br>";
+        echo 'video_provider - ' . $this->video_provider . "<br>";
+        echo 'video_category - ' . $this->video_category . "<br>";
+        echo 'video_author_id - ' . $this->video_author_id . "<br>";
+        echo 'video_created_at - ' . $this->video_created_at . "<br>";
+        echo 'video_seo_title - ' . $this->video_seo_title . "<br>";
+        echo 'video_seo_description - ' . $this->video_seo_description . "<br>";
+        echo 'video_seo_keywords - ' . $this->video_seo_keywords . "<br>";
     }
 }

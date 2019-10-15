@@ -2,7 +2,7 @@
 
 namespace includes;
 
-require __DIR__ . '/../config.php';
+//require __DIR__ . '/../config.php';
 
 class Videosurfpro_Activator {
 

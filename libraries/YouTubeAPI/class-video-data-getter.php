@@ -16,6 +16,9 @@ class DataGetter
         $video_id = $this->get_video_id($video_link);
         $json_output = file_get_contents($this->pattern .= $video_id);
         $json_video_data_array = json_decode($json_output, true);
+//        echo "<pre>";
+//        print_r($json_video_data_array);
+//        die();
         return $json_video_data_array;
     }
 

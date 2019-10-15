@@ -15,8 +15,19 @@
 require __DIR__ . '/../classes/class-videosurfpro-video.php';
 use admin\classes\Videosurfpro_Video;
 
-$all_videos = Videosurfpro_Video::get_all_videos();
+// Нужно для пагинации
+$items_on_page = 3;
+$current_page = (isset($_GET['paged']) && $_GET['paged'] > 0) ? (int) $_GET['paged'] : 1;
 
+$all_videos = Videosurfpro_Video::get_all_videos();
+$videos_with_pagination = Videosurfpro_Video::get_videos_with_pagination($current_page, $items_on_page);
+
+// Реализация поиска видео
+if(isset($_POST['search_videos'])) {
+    $text = $_POST['text'];
+    $all_videos = Videosurfpro_Video::search_videos($text);
+    $videos_with_pagination = $all_videos;
+}
 
 ?>
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
@@ -50,6 +61,31 @@ $all_videos = Videosurfpro_Video::get_all_videos();
         padding: 10px;
     }
 
+    /*  PAGINATION    */
+    .pagination {
+        display: inline-block;
+        margin: 15px;
+        margin-bottom: 0;
+    }
+
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+    }
+
+    .pagination a.active {
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+        border-radius: 5px;
+    }
+
     hr {
         margin: 0;
     }
@@ -63,67 +99,79 @@ $all_videos = Videosurfpro_Video::get_all_videos();
         <span><?php echo count($all_videos); ?> Videos</span>
     </div>
     <div class="videosurfpro-videos-filter-element">
-        <input type="search" name="s" value="" >
-        <input type="submit" class="button" value="Search Videos">
+        <form action="" method="POST">
+            <input type="search" name="text" value="" placeholder="Type video name..." >
+            <input type="submit" name="search_videos" class="button" value="Search Videos">
+        </form>
     </div>
 </div>
 
 <!--    PAGINATION    -->
 <?php
-//
-//$items_on_page = 3;
-//$pages = floor(count($all_videos) / $items_on_page);
-//$current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-//
-//?>
-<!--<nav>-->
-<!--    <ul>-->
-<!--        --><?php //for($i=1; $i <= $pages; $i++) : ?>
-<!--            <li><a href="?page=videosurfpro_submenu_all_videos&paged=--><?//=$i?><!--">--><?//=$i?><!--</a></li>-->
-<!--        --><?php //endfor ?>
-<!--    </ul>-->
-<!--</nav>-->
+
+$pages = round(count($all_videos) / $items_on_page);
+$previous_page = $current_page - 1;
+$next_page = $current_page + 1;
+
+?>
+<!--<div class="pagination">-->
+<!--    --><?php //if($pages > 1) : ?>
+<!--        --><?php //if($previous_page >= 1) : ?>
+<!--            <a href="?page=videosurfpro_submenu_all_videos&paged=--><?//=$previous_page?><!--">&laquo;</a>-->
+<!--        --><?php //endif; ?>
+<!--        <a href="?page=videosurfpro_submenu_all_videos&paged=--><?//=$current_page?><!--">--><?//=$current_page?><!--</a>-->
+<!--        --><?php //if(count($all_videos) > $current_page * $items_on_page) : ?>
+<!--            <a href="?page=videosurfpro_submenu_all_videos&paged=--><?//=$next_page?><!--">&raquo;</a>-->
+<!--        --><?php //endif; ?>
+<!--    --><?php //endif;?>
+<!--</div>-->
 
 <!--    VIDEOS    -->
 <div id="videosurfpro-all-videos-container">
     <hr>
-    <?php foreach($all_videos as $video) : ?>
-        <div class="videosurfpro-single-video-container <?php echo ($video->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
-            <div><?=$video->id?></div>
-            <div><?=$video->video_name?></div>
-            <div><?=$video->video_provider?></div>
-            <div>
-                <?php echo ($video->video_is_published == 'TRUE') ? "<a style='color:green; cursor:pointer;'>Published</a>" : "<a style='color:red; cursor:pointer;'>Draft</a>" ?>
+    <?php if(count($videos_with_pagination) >= 1) : ?>
+        <?php for($i = 0; $i < count($videos_with_pagination); $i++) : ?>
+            <div class="videosurfpro-single-video-container <?php echo ($videos_with_pagination[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
+                <div><?=$videos_with_pagination[$i]->id?></div>
+                <div><?=$videos_with_pagination[$i]->video_name?></div>
+                <div><?=$videos_with_pagination[$i]->video_provider?></div>
+                <div>
+                    <?php echo ($videos_with_pagination[$i]->video_is_published == 'TRUE') ? "<a style='color:green; cursor:pointer;'>Published</a>" : "<a style='color:red; cursor:pointer;'>Draft</a>" ?>
+                </div>
+                <div>
+                    <form action="" method="post">
+                        <input type="hidden" name="edit_video_by_id" value="<?=$videos_with_pagination[$i]->id?>">
+                        <input type="submit" class="button" value="Edit">
+                    </form>
+                </div>
+                <div>
+                    <form action="" method="post">
+                        <input type="hidden" name="delete_video_by_id" value="<?=$videos_with_pagination[$i]->id?>">
+                        <input type="submit" class="button" value="Delete">
+                    </form>
+                </div>
+                <div>
+                    <form action="" method="post">
+                        <input type="hidden" name="show_video_by_id" value="<?=$videos_with_pagination[$i]->id?>">
+                        <input type="submit" class="button" value="Show">
+                    </form>
+                </div>
             </div>
-            <div>
-                <form action="" method="post">
-                    <input type="hidden" name="edit_video_by_id" value="<?=$video->id?>">
-                    <input type="submit" class="button" value="Edit">
-                </form>
-            </div>
-            <div>
-                <form action="" method="post">
-                    <input type="hidden" name="delete_video_by_id" value="<?=$video->id?>">
-                    <input type="submit" class="button" value="Delete">
-                </form>
-            </div>
-            <div>
-                <form action="" method="post">
-                    <input type="hidden" name="show_video_by_id" value="<?=$video->id?>">
-                    <input type="submit" class="button" value="Show">
-                </form>
-            </div>
-        </div>
-        <hr>
-    <?php endforeach;?>
+        <?php endfor; ?>
+    <?php else : ?>
+        <div style="padding: 15px;">No Videos found.</div>
+    <?php endif; ?>
 </div>
 
-<?php
-
-$site_url = get_site_url();
-
-?>
-
-<iframe id="ytplayer" type="text/html" width="640" height="360"
-        src="http://www.youtube.com/embed/QenoWthH2NQ?autoplay=1&origin=<?=$site_url?>"
-        frameborder="0"/>
+<!--    PAGINATION    -->
+<div class="pagination">
+    <?php if($pages > 1) : ?>
+        <?php if($previous_page >= 1) : ?>
+            <a href="?page=videosurfpro_submenu_all_videos&paged=<?=$previous_page?>">&laquo;</a>
+        <?php endif; ?>
+        <a href="?page=videosurfpro_submenu_all_videos&paged=<?=$current_page?>"><?=$current_page?></a>
+        <?php if(count($all_videos) > $current_page * $items_on_page) : ?>
+            <a href="?page=videosurfpro_submenu_all_videos&paged=<?=$next_page?>">&raquo;</a>
+        <?php endif; ?>
+    <?php endif;?>
+</div>
