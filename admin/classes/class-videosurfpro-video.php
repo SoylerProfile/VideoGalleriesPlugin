@@ -41,12 +41,14 @@ class Videosurfpro_Video
 
     public function add_video() {
         if($this->validate()) {
+            //нужно отрефакторить, создать класс валидатор
+            $this->validate_all_data();
             // code if data is ok
             global $wpdb;
 
             $table = $wpdb->prefix . VIDEOS_TABLE;
 
-            $wpdb->insert(
+            $result = $wpdb->insert(
                 $table,
                 array(
                     'video_name' => $this->video_name,
@@ -61,9 +63,12 @@ class Videosurfpro_Video
                     'video_seo_description' => $this->video_seo_description,
                     'video_seo_keywords' => $this->video_seo_keywords,
                 ),
-                array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s',)
+                array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
             );
-            return true;
+            if($result)
+                return true;
+            else
+                return false;
         }
         else {
             // code if data is not ok
@@ -130,5 +135,51 @@ class Videosurfpro_Video
         echo 'video_seo_title - ' . $this->video_seo_title . "<br>";
         echo 'video_seo_description - ' . $this->video_seo_description . "<br>";
         echo 'video_seo_keywords - ' . $this->video_seo_keywords . "<br>";
+    }
+
+    private function validate_all_data() {
+        $this->video_name = htmlspecialchars(strip_tags(stripslashes(trim($this->video_name))));
+        $this->video_description = htmlspecialchars(strip_tags(stripslashes(trim($this->video_description))));
+        $this->video_link = htmlspecialchars(strip_tags(stripslashes(trim($this->video_link))));
+        $this->video_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_id))));
+        $this->video_provider = htmlspecialchars(strip_tags(stripslashes(trim($this->video_provider))));
+        $this->video_category = htmlspecialchars(strip_tags(stripslashes(trim($this->video_category))));
+        $this->video_author_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_author_id))));
+        $this->video_created_at = htmlspecialchars(strip_tags(stripslashes(trim($this->video_created_at))));
+        $this->video_seo_title = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_title))));
+        $this->video_seo_description = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_description))));
+        $this->video_seo_keywords = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_keywords))));
+
+        $this->video_name = $this->RemoveEmoji($this->video_name);
+        $this->video_description = $this->RemoveEmoji($this->video_description);
+        $this->video_link = $this->RemoveEmoji($this->video_link);
+        $this->video_id = $this->RemoveEmoji($this->video_id);
+        $this->video_provider = $this->RemoveEmoji($this->video_provider);
+        $this->video_category = $this->RemoveEmoji($this->video_category);
+        $this->video_author_id = $this->RemoveEmoji($this->video_author_id);
+        $this->video_created_at = $this->RemoveEmoji($this->video_created_at);
+        $this->video_seo_title = $this->RemoveEmoji($this->video_seo_title);
+        $this->video_seo_description = $this->RemoveEmoji($this->video_seo_description);
+        $this->video_seo_keywords = $this->RemoveEmoji($this->video_seo_keywords);
+    }
+
+    private function RemoveEmoji($string) {
+
+        $regex_emoticons = '/[\x{1F600}-\x{1F64F}]/u';
+        $clear_string = preg_replace($regex_emoticons, '', $string);
+
+        $regex_symbols = '/[\x{1F300}-\x{1F5FF}]/u';
+        $clear_string = preg_replace($regex_symbols, '', $clear_string);
+
+        $regex_transport = '/[\x{1F680}-\x{1F6FF}]/u';
+        $clear_string = preg_replace($regex_transport, '', $clear_string);
+
+        $regex_misc = '/[\x{2600}-\x{26FF}]/u';
+        $clear_string = preg_replace($regex_misc, '', $clear_string);
+
+        $regex_dingbats = '/[\x{2700}-\x{27BF}]/u';
+        $clear_string = preg_replace($regex_dingbats, '', $clear_string);
+
+        return $clear_string;
     }
 }
