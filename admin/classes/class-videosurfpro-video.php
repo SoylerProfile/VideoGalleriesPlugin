@@ -6,6 +6,7 @@ namespace admin\classes;
 require __DIR__ . '/../../libraries/YouTubeAPI/class-video-data-getter.php';
 
 use libraries\YouTubeAPI\DataGetter;
+use phpDocumentor\Reflection\Types\String_;
 
 class Videosurfpro_Video
 {
@@ -43,6 +44,10 @@ class Videosurfpro_Video
         if($this->validate()) {
             //нужно отрефакторить, создать класс валидатор
             $this->validate_all_data();
+//            $this->print_all_data();
+//            $string = strval($this->video_description);
+//            die();
+
             // code if data is ok
             global $wpdb;
 
@@ -63,7 +68,7 @@ class Videosurfpro_Video
                     'video_seo_description' => $this->video_seo_description,
                     'video_seo_keywords' => $this->video_seo_keywords,
                 ),
-                array('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')
+                array('%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')
             );
             if($result)
                 return true;
@@ -150,20 +155,20 @@ class Videosurfpro_Video
         $this->video_seo_description = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_description))));
         $this->video_seo_keywords = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_keywords))));
 
-        $this->video_name = $this->RemoveEmoji($this->video_name);
-        $this->video_description = $this->RemoveEmoji($this->video_description);
-        $this->video_link = $this->RemoveEmoji($this->video_link);
-        $this->video_id = $this->RemoveEmoji($this->video_id);
-        $this->video_provider = $this->RemoveEmoji($this->video_provider);
-        $this->video_category = $this->RemoveEmoji($this->video_category);
-        $this->video_author_id = $this->RemoveEmoji($this->video_author_id);
-        $this->video_created_at = $this->RemoveEmoji($this->video_created_at);
-        $this->video_seo_title = $this->RemoveEmoji($this->video_seo_title);
-        $this->video_seo_description = $this->RemoveEmoji($this->video_seo_description);
-        $this->video_seo_keywords = $this->RemoveEmoji($this->video_seo_keywords);
+        $this->video_name = $this->remove_emoji($this->video_name);
+        $this->video_description = $this->remove_emoji($this->video_description);
+        $this->video_link = $this->remove_emoji($this->video_link);
+        $this->video_id = $this->remove_emoji($this->video_id);
+        $this->video_provider = $this->remove_emoji($this->video_provider);
+        $this->video_category = $this->remove_emoji($this->video_category);
+        $this->video_author_id = $this->remove_emoji($this->video_author_id);
+        $this->video_created_at = $this->remove_emoji($this->video_created_at);
+        $this->video_seo_title = $this->remove_emoji($this->video_seo_title);
+        $this->video_seo_description = $this->remove_emoji($this->video_seo_description);
+        $this->video_seo_keywords = $this->remove_emoji($this->video_seo_keywords);
     }
 
-    private function RemoveEmoji($string) {
+    private function remove_emoji($string) {
 
         $regex_emoticons = '/[\x{1F600}-\x{1F64F}]/u';
         $clear_string = preg_replace($regex_emoticons, '', $string);
@@ -177,8 +182,8 @@ class Videosurfpro_Video
         $regex_misc = '/[\x{2600}-\x{26FF}]/u';
         $clear_string = preg_replace($regex_misc, '', $clear_string);
 
-        $regex_dingbats = '/[\x{2700}-\x{27BF}]/u';
-        $clear_string = preg_replace($regex_dingbats, '', $clear_string);
+        $regex_emoticons = '/[^\p{L}\p{N}\s]/u';
+        $clear_string = preg_replace($regex_emoticons, '', $clear_string);
 
         return $clear_string;
     }
