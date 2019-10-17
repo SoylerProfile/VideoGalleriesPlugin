@@ -15,12 +15,13 @@ else {
 if(isset($_POST['save_edited_video'])) {
     $id = $_POST['id'];
     $video_name = $_POST['video_name'];
+    $video_slug = 'SLUG';
     $video_description = $_POST['video_description'];
     $video_category = $_POST['video_category'];
     $video_seo_title = $_POST['video_seo_title'];
     $video_seo_description = $_POST['video_seo_description'];
     $video_seo_keywords = $_POST['video_seo_keywords'];
-    $result = Videosurfpro_Video::update_video_data($id, $video_name, $video_description, $video_category, $video_seo_title, $video_seo_description, $video_seo_keywords);
+    $result = Videosurfpro_Video::update_video_data($id, $video_name, $video_slug, $video_description, $video_category, $video_seo_title, $video_seo_description, $video_seo_keywords);
     if($result) {
         echo "Changes were successfully saved!";
     }

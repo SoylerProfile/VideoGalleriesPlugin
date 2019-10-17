@@ -16,6 +16,7 @@ use admin\classes\Videosurfpro_Video;
 
 if(isset($_POST['submit'])) {
     $video_name = $_POST['video_name'];
+    $video_slug = 'SLUG';
     $video_description = $_POST['video_description'];
     $video_link = $_POST['video_link'];
     $video_id = $_POST['video_id'];
@@ -27,7 +28,7 @@ if(isset($_POST['submit'])) {
     $video_seo_description = $_POST['video_seo_description'];
     $video_seo_keywords = $_POST['video_seo_keywords'];
 
-    $video = new Videosurfpro_Video($video_name, $video_description, $video_link, $video_id, $video_provider, $video_category, $video_author_id, $video_created_at, $video_seo_title, $video_seo_description, $video_seo_keywords);
+    $video = new Videosurfpro_Video($video_name, $video_slug, $video_description, $video_link, $video_id, $video_provider, $video_category, $video_author_id, $video_created_at, $video_seo_title, $video_seo_description, $video_seo_keywords);
     $result = $video->add_video();
 
     if($result)

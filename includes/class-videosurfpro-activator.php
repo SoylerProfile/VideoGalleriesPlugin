@@ -21,6 +21,7 @@ class Videosurfpro_Activator {
             $sql = "CREATE TABLE $table_name (
               id int(11) UNSIGNED AUTO_INCREMENT,
               video_name varchar(355),
+              video_slug varchar(355),
               video_description text NOT NULL,
               video_link varchar(355),
               video_id varchar(355),
@@ -32,6 +33,25 @@ class Videosurfpro_Activator {
               video_seo_title varchar(155),
               video_seo_description varchar(255),
               video_seo_keywords varchar(255),
+              UNIQUE KEY id (id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
+
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+        }
+
+        $table_name = $wpdb->prefix . CATEGORIES_TABLE;
+
+        if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
+            $sql = "CREATE TABLE $table_name (
+              id int(11) UNSIGNED AUTO_INCREMENT,
+              category_name varchar(355),
+              category_slug varchar(355),
+              category_description text NOT NULL,
+              category_created_at datetime DEFAULT NULL,
+              category_seo_title varchar(155),
+              category_seo_description varchar(255),
+              category_seo_keywords varchar(255),
               UNIQUE KEY id (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
 

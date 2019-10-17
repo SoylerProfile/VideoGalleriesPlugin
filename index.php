@@ -8,10 +8,11 @@ Author: Fuze
 Author URI: http://fuze.com
 */
 
-require __DIR__ . '/functions.php';
 require __DIR__ . '/config.php';
+require __DIR__ . '/functions.php';
 require __DIR__ . '/libraries/YouTubeAPI/class-video-data-getter.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-video.php';
+require __DIR__ . '/admin/classes/class-videosurfpro-category.php';
 
 
 // Хук. Активация нашего плагина

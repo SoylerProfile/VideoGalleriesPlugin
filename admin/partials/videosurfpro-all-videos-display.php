@@ -35,6 +35,20 @@ if(isset($_GET['change_video_status'])) {
     Videosurfpro_Video::change_video_status($video_id, $new_status);
 }
 
+if(isset($_POST['delete_video_by_id'])) {
+    $video_id = $_POST['video_id'];
+    $result = Videosurfpro_Video::delete_video_by_id($video_id);
+    if($result) {
+        echo 'Your video was successfully deleted';
+    }
+    else {
+        echo "Can not delete the video <br>";
+        echo "<pre>";
+        var_dump($result);
+        echo "</pre>";
+    }
+}
+
 ?>
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 
@@ -114,11 +128,9 @@ if(isset($_GET['change_video_status'])) {
 
 <!--    PAGINATION    -->
 <?php
-
 $pages = ceil(count($all_videos) / $items_on_page);
 $previous_page = $current_page - 1;
 $next_page = $current_page + 1;
-
 ?>
 <!--<div class="pagination">-->
 <!--    --><?php //if($pages > 1) : ?>
@@ -152,8 +164,8 @@ $next_page = $current_page + 1;
                 </div>
                 <div>
                     <form action="" method="POST">
-                        <input type="hidden" name="delete_video_by_id" value="<?=$videos_with_pagination[$i]->id?>">
-                        <input type="submit" class="button" value="Delete">
+                        <input type="hidden" name="video_id" value="<?=$videos_with_pagination[$i]->id?>">
+                        <input type="submit" name="delete_video_by_id" class="button" value="Delete">
                     </form>
                 </div>
                 <div>

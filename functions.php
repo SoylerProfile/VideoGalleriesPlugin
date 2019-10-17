@@ -47,6 +47,10 @@ function videosurfpro_display_submenu_add_video() {
     Videosurfpro_Admin::videosurfpro_display_submenu_add_video();
 }
 
+function videosurfpro_display_submenu_add_category() {
+    Videosurfpro_Admin::videosurfpro_display_submenu_add_category();
+}
+
 function videosurfpro_display_submenu_advertisement() {
     Videosurfpro_Admin::videosurfpro_display_submenu_advertisement();
 }
@@ -60,9 +64,15 @@ function videosurfpro_display_submenu_faq() {
 }
 
 
-
+/**
+ * Hidden menus
+ */
 function videosurfpro_display_submenu_edit_video() {
     Videosurfpro_Admin::videosurfpro_display_submenu_edit_video();
+}
+
+function videosurfpro_display_submenu_edit_category() {
+    Videosurfpro_Admin::videosurfpro_display_submenu_edit_category();
 }
 
 // ------------------------------------------------------------ //
