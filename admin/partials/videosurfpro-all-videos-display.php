@@ -12,13 +12,12 @@
  * @subpackage Videosurfpro/admin/partials
  */
 
-require __DIR__ . '/../classes/class-videosurfpro-video.php';
+//require __DIR__ . '/../classes/class-videosurfpro-video.php';
 use admin\classes\Videosurfpro_Video;
 
 // Нужно для пагинации
 $items_on_page = 3;
 $current_page = (isset($_GET['paged']) && $_GET['paged'] > 0) ? (int) $_GET['paged'] : 1;
-
 $all_videos = Videosurfpro_Video::get_all_videos();
 $videos_with_pagination = Videosurfpro_Video::get_videos_with_pagination($current_page, $items_on_page);
 
@@ -27,6 +26,13 @@ if(isset($_POST['search_videos'])) {
     $text = $_POST['text'];
     $all_videos = Videosurfpro_Video::search_videos($text);
     $videos_with_pagination = $all_videos;
+}
+
+// Смена статуса видео
+if(isset($_GET['change_video_status'])) {
+    $video_id = $_GET['video_id'];
+    $new_status = $_GET['new_value'];
+    Videosurfpro_Video::change_video_status($video_id, $new_status);
 }
 
 ?>
@@ -109,7 +115,7 @@ if(isset($_POST['search_videos'])) {
 <!--    PAGINATION    -->
 <?php
 
-$pages = round(count($all_videos) / $items_on_page);
+$pages = ceil(count($all_videos) / $items_on_page);
 $previous_page = $current_page - 1;
 $next_page = $current_page + 1;
 
@@ -136,22 +142,22 @@ $next_page = $current_page + 1;
                 <div><?=$videos_with_pagination[$i]->video_name?></div>
                 <div><?=$videos_with_pagination[$i]->video_provider?></div>
                 <div>
-                    <?php echo ($videos_with_pagination[$i]->video_is_published == 'TRUE') ? "<a style='color:green; cursor:pointer;'>Published</a>" : "<a style='color:red; cursor:pointer;'>Draft</a>" ?>
+                    <?php echo ($videos_with_pagination[$i]->video_is_published == 1) ? "<a style='color:green; cursor:pointer; text-decoration: none;' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=0&video_id=". $videos_with_pagination[$i]->id ."'>Published</a>" : "<a style='color:red; cursor:pointer; text-decoration: none;' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=1&video_id=". $videos_with_pagination[$i]->id ."'>Draft</a>" ?>
                 </div>
                 <div>
-                    <form action="" method="post">
+                    <form action="?page=videosurfpro_submenu_edit_video&video_id=<?=$videos_with_pagination[$i]->id?>" method="POST">
                         <input type="hidden" name="edit_video_by_id" value="<?=$videos_with_pagination[$i]->id?>">
                         <input type="submit" class="button" value="Edit">
                     </form>
                 </div>
                 <div>
-                    <form action="" method="post">
+                    <form action="" method="POST">
                         <input type="hidden" name="delete_video_by_id" value="<?=$videos_with_pagination[$i]->id?>">
                         <input type="submit" class="button" value="Delete">
                     </form>
                 </div>
                 <div>
-                    <form action="" method="post">
+                    <form action="" method="POST">
                         <input type="hidden" name="show_video_by_id" value="<?=$videos_with_pagination[$i]->id?>">
                         <input type="submit" class="button" value="Show">
                     </form>

@@ -2,6 +2,9 @@
 
 namespace admin;
 
+//require_once __DIR__ . '/classes/class-videosurfpro-video.php';
+use admin\classes\Videosurfpro_Video;
+
 class Videosurfpro_Admin {
 
     public static function add_plugin_admin_menu() {
@@ -13,6 +16,9 @@ class Videosurfpro_Admin {
         add_submenu_page( 'videosurfpro_admin_menu', 'Advertisement', 'Advertisement', 'manage_options', 'videosurfpro_submenu_advertisement', 'videosurfpro_display_submenu_advertisement' );
         add_submenu_page( 'videosurfpro_admin_menu', 'All Providers', 'All Providers', 'manage_options', 'videosurfpro_submenu_providers', 'videosurfpro_display_submenu_providers' );
         add_submenu_page( 'videosurfpro_admin_menu', 'FAQ', 'FAQ', 'manage_options', 'videosurfpro_submenu_faq', 'videosurfpro_display_submenu_faq' );
+
+        // Hidden menus
+        add_submenu_page( null, 'Edit Video', null, 'manage_options', 'videosurfpro_submenu_edit_video', 'videosurfpro_display_submenu_edit_video' );
     }
 
     public static function videosurfpro_display_admin_menu_main() {
@@ -77,6 +83,19 @@ class Videosurfpro_Admin {
 
         // show the view
         include_once( 'partials/videosurfpro-faq-display.php' );
+    }
+
+
+    /**
+     * Hidden menus
+     */
+
+    public static function videosurfpro_display_submenu_edit_video() {
+        // make some logic
+        // ...
+
+        // show the view
+        include_once( 'partials/videosurfpro-edit-video-display.php' );
     }
 
 }

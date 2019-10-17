@@ -11,7 +11,7 @@
  * @subpackage Videosurfpro/admin/partials
  */
 
-require __DIR__ . '/../classes/class-videosurfpro-video.php';
+//require __DIR__ . '/../classes/class-videosurfpro-video.php';
 use admin\classes\Videosurfpro_Video;
 
 if(isset($_POST['submit'])) {

@@ -59,6 +59,12 @@ function videosurfpro_display_submenu_faq() {
     Videosurfpro_Admin::videosurfpro_display_submenu_faq();
 }
 
+
+
+function videosurfpro_display_submenu_edit_video() {
+    Videosurfpro_Admin::videosurfpro_display_submenu_edit_video();
+}
+
 // ------------------------------------------------------------ //
 
 //function videosurfpro_enqueue_scripts() {

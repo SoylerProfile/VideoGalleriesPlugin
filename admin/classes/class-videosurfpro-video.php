@@ -2,11 +2,9 @@
 
 namespace admin\classes;
 
-//require __DIR__ . '/../../config.php';
-require __DIR__ . '/../../libraries/YouTubeAPI/class-video-data-getter.php';
+//require __DIR__ . '/../../libraries/YouTubeAPI/class-video-data-getter.php';
 
 use libraries\YouTubeAPI\DataGetter;
-use phpDocumentor\Reflection\Types\String_;
 
 class Videosurfpro_Video
 {
@@ -186,5 +184,39 @@ class Videosurfpro_Video
         $clear_string = preg_replace($regex_emoticons, '', $clear_string);
 
         return $clear_string;
+    }
+
+    public static function change_video_status($video_id, $new_value) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $wpdb->update($table, array('video_is_published' => $new_value), array('id' => $video_id));
+    }
+
+    public static function get_all_video_data_from_db($video_id) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $sql = "SELECT * FROM $table WHERE `id`=$video_id";
+        $video_data = $wpdb->get_results($sql);
+        return $video_data;
+    }
+
+    public static function update_video_data($id, $video_name, $video_description, $video_category, $video_seo_title, $video_seo_description, $video_seo_keywords) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+
+//        echo $id . "<br>";
+//        echo $video_name . "<br>";
+//        echo $video_description . "<br>";
+//        echo $video_category . "<br>";
+//        echo $video_seo_title . "<br>";
+//        echo $video_seo_description . "<br>";
+//        echo $video_seo_keywords . "<br>";
+//        die();
+
+        $result = $wpdb->update($table,
+            array('video_name' => $video_name, 'video_description' => $video_description, 'video_category' => $video_category, 'video_seo_title' => $video_seo_title, 'video_seo_description' => $video_seo_description, 'video_seo_keywords' => $video_seo_keywords),
+            array('id' => $id)
+        );
+        return $result;
     }
 }

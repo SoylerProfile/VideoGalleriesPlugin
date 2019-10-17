@@ -10,6 +10,9 @@ Author URI: http://fuze.com
 
 require __DIR__ . '/functions.php';
 require __DIR__ . '/config.php';
+require __DIR__ . '/libraries/YouTubeAPI/class-video-data-getter.php';
+require __DIR__ . '/admin/classes/class-videosurfpro-video.php';
+
 
 // Хук. Активация нашего плагина
 register_activation_hook( __FILE__, 'videosurfpro_activation' );
