@@ -222,4 +222,11 @@ class Videosurfpro_Video
         $result = $wpdb->delete($table, array('id' => $video_id));
         return $result;
     }
+
+    public static function get_video_youtube_id_by_video_id($video_id) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $result = $wpdb->get_var("SELECT `video_id` FROM $table WHERE `id`=$video_id");
+        return $result;
+    }
 }

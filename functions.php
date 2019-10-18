@@ -1,10 +1,9 @@
 <?php
 
-//require __DIR__ . '/config.php';
-
 // includes
 require __DIR__ . '/includes/class-videosurfpro-activator.php';
 use includes\Videosurfpro_Activator;
+use includes\Videosurfpro_Shortcode;
 
 // admin
 require __DIR__ . '/admin/class-videosurfpro-admin.php';

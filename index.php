@@ -13,6 +13,10 @@ require __DIR__ . '/functions.php';
 require __DIR__ . '/libraries/YouTubeAPI/class-video-data-getter.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-video.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-category.php';
+require __DIR__ . '/includes/class-videosurfpro-shortcode.php';
+
+use includes\Videosurfpro_Shortcode;
+use admin\classes\Videosurfpro_Video;
 
 
 // Хук. Активация нашего плагина
@@ -30,5 +34,26 @@ register_uninstall_hook(__FILE__, 'videosurfpro_uninstall');
 // Регистрируем меню нашего плагина
 add_action('admin_menu', 'videosurfpro_admin_menu');
 
-//// Регистрируем шорткоды
+// Регистрируем шорткоды
 //add_action('init', 'videosurfpro_shortcodes_register');
+
+/**
+ * Регистрируем шорткоды
+ */
+$shortcode = 'videosurfpro-video';
+add_shortcode($shortcode, function($request) {
+    if(is_admin()) {
+        return '';
+    }
+    else {
+        $video_id = $request['id'];
+        $video = Videosurfpro_Video::get_all_video_data_from_db($video_id);
+        if(empty($video)) {
+            $result = 'Your Video is not exists on the Database';
+            return $result;
+        }
+        $video = $video[0];
+        $result = '<iframe title="'. $video->video_name .'" width="640" height="360" src="https://www.youtube.com/embed/' . $video->video_id . '?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>';
+        return $result;
+    }
+});
