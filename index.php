@@ -57,3 +57,14 @@ add_shortcode($shortcode, function($request) {
         return $result;
     }
 });
+
+$shortcode = 'videosurfpro-videos-page';
+add_shortcode($shortcode, function($request) {
+    if(is_admin()) {
+        return '';
+    }
+    else {
+        $html = 'Hello, I am your shortcode';
+        return $html;
+    }
+});

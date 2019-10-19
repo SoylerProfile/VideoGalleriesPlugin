@@ -59,6 +59,35 @@ class Videosurfpro_Activator {
             dbDelta($sql);
         }
 
+
+        $table_name = $wpdb->prefix . 'posts';
+        $post_content = "<!-- wp:shortcode -->
+                        [videosurfpro-videos-page]
+                        <!-- /wp:shortcode -->";
+        $date = date("Y-m-d H:i:s");
+        if (empty($wpdb->get_var("SELECT * FROM `wp_posts` WHERE `post_title` = 'Videos'"))) {
+            $wpdb->insert($table_name,
+                array(
+                    'post_author' => 1,
+                    'post_date' => $date,
+                    'post_date_gmt' => $date,
+                    'post_content' => $post_content,
+                    'post_title' => 'Videos',
+                    'post_name' => 'videos',
+                ),
+                array( '%s', '%s', '%s' ));
+        }
+//        else {
+//            $wpdb->update(
+//                array(
+//                'post_title' => 'Videos',
+//                'post_content' => 'My shortcode',
+//                'post_name' => 'Videos',
+//            ), array(
+//                'post_title' => 'Videos',
+//            ));
+//        }
+
         // create next table below
         // ...
     }

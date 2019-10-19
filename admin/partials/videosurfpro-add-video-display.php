@@ -55,5 +55,5 @@ if(isset($_POST['submit'])) {
     <div>Video SEO TITLE: <input type="text" name="video_seo_title" value="1" required></div>
     <div>Video SEO DESCRIPTION: <input type="text" name="video_seo_description" value="1" required></div>
     <div>Video SEO KEYWORDS: <input type="text" name="video_seo_keywords" value="1" required></div>
-    <div><input name='submit' type="submit" value="Добавить"></div>
+    <div><input name='submit' type="submit" class="button" value="Добавить"></div>
 </form>

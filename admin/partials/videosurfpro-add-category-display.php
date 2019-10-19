@@ -43,5 +43,5 @@ if(isset($_POST['submit'])) {
     <div>Category SEO TITLE: <input type="text" name="category_seo_title" value="1" required></div>
     <div>Category SEO DESCRIPTION: <input type="text" name="category_seo_description" value="1" required></div>
     <div>Category SEO KEYWORDS: <input type="text" name="category_seo_keywords" value="1" required></div>
-    <div><input name='submit' type="submit" value="Добавить"></div>
+    <div><input name='submit' type="submit" class="button" value="Добавить"></div>
 </form>
