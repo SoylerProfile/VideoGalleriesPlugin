@@ -436,10 +436,12 @@
             </li>
 
             <li class="cd-faq__item">
-                <a class="cd-faq__trigger" href="#0"><span>Can I remove a post?</span></a>
+                <a class="cd-faq__trigger" href="#0"><span>Что делать, если мое видео не выводится?</span></a>
                 <div class="cd-faq__content">
                     <div class="text-component">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis provident officiis, reprehenderit numquam. Praesentium veritatis eos tenetur magni debitis inventore fugit, magnam, reiciendis, saepe obcaecati ex vero quaerat distinctio velit.</p>
+                        <p>Есть 2 причины, по которым добавленное вами видео может не выводиться:</p>
+                        <p>1) Статус вашего видео Draft - смените его на Published</p>
+                        <p>2) Автор ролика не дает возможность выводить его на сторонних ресурсах</p>
                     </div>
                 </div> <!-- cd-faq__content -->
             </li>

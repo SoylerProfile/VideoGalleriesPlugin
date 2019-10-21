@@ -149,7 +149,7 @@ class Videosurfpro_Video
         $this->video_slug = htmlspecialchars(strip_tags(stripslashes(trim($this->video_slug))));
         $this->video_description = htmlspecialchars(strip_tags(stripslashes(trim($this->video_description))));
         $this->video_link = htmlspecialchars(strip_tags(stripslashes(trim($this->video_link))));
-        $this->video_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_id))));
+//        $this->video_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_id))));
         $this->video_provider = htmlspecialchars(strip_tags(stripslashes(trim($this->video_provider))));
         $this->video_category = htmlspecialchars(strip_tags(stripslashes(trim($this->video_category))));
         $this->video_author_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_author_id))));
@@ -160,8 +160,7 @@ class Videosurfpro_Video
         $this->video_name = $this->remove_emoji($this->video_name);
         $this->video_slug = $this->remove_emoji($this->video_slug);
         $this->video_description = $this->remove_emoji($this->video_description);
-        $this->video_link = $this->remove_emoji($this->video_link);
-        $this->video_id = $this->remove_emoji($this->video_id);
+//        $this->video_id = $this->remove_emoji($this->video_id);
         $this->video_provider = $this->remove_emoji($this->video_provider);
         $this->video_category = $this->remove_emoji($this->video_category);
         $this->video_author_id = $this->remove_emoji($this->video_author_id);
@@ -237,28 +236,43 @@ class Videosurfpro_Video
     }
 
     // check if YouTube Video thumbnail exists
-    public static function is_exists_youtube_video_thumbnail($video_id) {
-        $item = $video_id;
-        $MaxResURL = 'https://i1.ytimg.com/vi/'.$item.'/maxresdefault.jpg';
-        //print $MaxResURL;
+//    public static function is_exists_youtube_video_thumbnail($video_id) {
+//        $item = $video_id;
+//        $MaxResURL = 'https://i1.ytimg.com/vi/'.$item.'/maxresdefault.jpg';
+//        //print $MaxResURL;
+//
+//        $curl = curl_init();
+//        curl_setopt_array($curl, array(
+//            CURLOPT_URL => $MaxResURL,
+//            CURLOPT_HEADER => true,
+//            CURLOPT_RETURNTRANSFER => true,
+//            CURLOPT_NOBODY => true));
+//
+//        $header = explode("\n", curl_exec($curl));
+//        curl_close($curl);
+//
+//        //var_dump($header);
+//
+//        //If maxres image exists do something with it.
+//        if (strpos($header[0], '200') !== false) {
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    }
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $MaxResURL,
-            CURLOPT_HEADER => true,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_NOBODY => true));
+    public static function get_all_videos_orderby_views_desc () {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $sql = "SELECT * FROM $table ORDER BY `video_views` DESC";
+        $all_orderby_views_videos = $wpdb->get_results($sql);
+        return $all_orderby_views_videos;
+    }
 
-        $header = explode("\n", curl_exec($curl));
-        curl_close($curl);
-
-        //var_dump($header);
-
-        //If maxres image exists do something with it.
-        if (strpos($header[0], '200') !== false) {
-            return true;
-        }else{
-            return false;
-        }
+    public static function video_was_watched($video_id) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $sql = "UPDATE $table SET video_views = video_views + 1 WHERE id = $video_id";
+        $wpdb->query($sql);
     }
 }

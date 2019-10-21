@@ -64,8 +64,8 @@ add_shortcode($shortcode, function ($request) {
     } else {
         // GET DATA
         if (isset($_POST['videos_sortby_views'])) {
-            // Нужно реализовать получение сортированных видео по просмотрах
-            $videos = Videosurfpro_Video::get_all_videos();
+            $all_orderby_views_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc();
+            $videos = $all_orderby_views_videos;
 
         } else if (isset($_POST['videos_sortby_latest'])) {
             $all_orderby_latest_videos = Videosurfpro_Video::get_all_videos_orderby_latest_desc();
@@ -79,7 +79,7 @@ add_shortcode($shortcode, function ($request) {
         $content = "";
         $domain = get_site_url();
         $videos_sort_div = "
-        <div>
+        <div style='display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px; max-width: 100vw;'>
             <form action='' method='POST'>
                 <input type='submit' name='videos_sortby_views' value='Sort by Views'>
             </form>
@@ -93,12 +93,14 @@ add_shortcode($shortcode, function ($request) {
         $latest_videos = "<div style='margin:0; display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px;'>";
         // INSERT DATA
         foreach ($videos as $video) {
-            if (Videosurfpro_Video::is_exists_youtube_video_thumbnail($video->video_id) == true) {
-                $latest_videos .= '
-                <a href="' . $domain . '/?videosurfpro_video_id=' . $video->id . '">
-                    <img src="http://img.youtube.com/vi/' . $video->video_id . '/maxresdefault.jpg" />
-                </a>
-            ';
+            if ($video->video_is_published == true) {
+//                if (Videosurfpro_Video::is_exists_youtube_video_thumbnail($video->video_id) == true) {
+                    $latest_videos .= '
+                        <a href="' . $domain . '/?videosurfpro_video_id=' . $video->id . '">
+                            <img src="http://img.youtube.com/vi/' . $video->video_id . '/mqdefault.jpg" />
+                        </a>
+                    ';
+//                }
             }
         }
         $latest_videos .= '</div';
@@ -111,13 +113,14 @@ add_shortcode($shortcode, function ($request) {
 });
 
 /**
- * Creat a custom template for single videos
+ * Create a custom template for single videos
  */
 
 add_filter('init', function ($template) {
     if (isset($_GET['videosurfpro_video_id'])) {
         $videosurfpro_video_id = $_GET['videosurfpro_video_id'];
         $video = Videosurfpro_Video::get_all_video_data_from_db($videosurfpro_video_id);
+        Videosurfpro_Video::video_was_watched($videosurfpro_video_id);
         $html = "";
         if (empty($video)) {
             $html .= 'Видео с указанным идентификатором не существует';
