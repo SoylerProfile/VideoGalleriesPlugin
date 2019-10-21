@@ -23,7 +23,7 @@ if(isset($_POST['submit'])) {
     $video_provider = $_POST['video_provider'];
     $video_category = $_POST['video_category'];
     $video_author_id = get_current_user_id();
-    $video_created_at = date("m.d.y");
+    $video_created_at = date("Y-m-d H:i:s");
     $video_seo_title = $_POST['video_seo_title'];
     $video_seo_description = $_POST['video_seo_description'];
     $video_seo_keywords = $_POST['video_seo_keywords'];

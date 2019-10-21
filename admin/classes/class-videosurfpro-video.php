@@ -153,7 +153,6 @@ class Videosurfpro_Video
         $this->video_provider = htmlspecialchars(strip_tags(stripslashes(trim($this->video_provider))));
         $this->video_category = htmlspecialchars(strip_tags(stripslashes(trim($this->video_category))));
         $this->video_author_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_author_id))));
-        $this->video_created_at = htmlspecialchars(strip_tags(stripslashes(trim($this->video_created_at))));
         $this->video_seo_title = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_title))));
         $this->video_seo_description = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_description))));
         $this->video_seo_keywords = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_keywords))));
@@ -166,7 +165,6 @@ class Videosurfpro_Video
         $this->video_provider = $this->remove_emoji($this->video_provider);
         $this->video_category = $this->remove_emoji($this->video_category);
         $this->video_author_id = $this->remove_emoji($this->video_author_id);
-        $this->video_created_at = $this->remove_emoji($this->video_created_at);
         $this->video_seo_title = $this->remove_emoji($this->video_seo_title);
         $this->video_seo_description = $this->remove_emoji($this->video_seo_description);
         $this->video_seo_keywords = $this->remove_emoji($this->video_seo_keywords);
@@ -228,5 +226,39 @@ class Videosurfpro_Video
         $table = $wpdb->prefix . VIDEOS_TABLE;
         $result = $wpdb->get_var("SELECT `video_id` FROM $table WHERE `id`=$video_id");
         return $result;
+    }
+
+    public static function get_all_videos_orderby_latest_desc() {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $sql = "SELECT * FROM $table ORDER BY `video_created_at` DESC";
+        $all_latest_videos = $wpdb->get_results($sql);
+        return $all_latest_videos;
+    }
+
+    // check if YouTube Video thumbnail exists
+    public static function is_exists_youtube_video_thumbnail($video_id) {
+        $item = $video_id;
+        $MaxResURL = 'https://i1.ytimg.com/vi/'.$item.'/maxresdefault.jpg';
+        //print $MaxResURL;
+
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $MaxResURL,
+            CURLOPT_HEADER => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_NOBODY => true));
+
+        $header = explode("\n", curl_exec($curl));
+        curl_close($curl);
+
+        //var_dump($header);
+
+        //If maxres image exists do something with it.
+        if (strpos($header[0], '200') !== false) {
+            return true;
+        }else{
+            return false;
+        }
     }
 }

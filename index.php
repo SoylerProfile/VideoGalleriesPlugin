@@ -20,7 +20,7 @@ use admin\classes\Videosurfpro_Video;
 
 
 // Хук. Активация нашего плагина
-register_activation_hook( __FILE__, 'videosurfpro_activation' );
+register_activation_hook(__FILE__, 'videosurfpro_activation');
 
 // Хук. Удаление плагина (удаляем все созданные плагином таблицы)
 register_uninstall_hook(__FILE__, 'videosurfpro_uninstall');
@@ -41,30 +41,96 @@ add_action('admin_menu', 'videosurfpro_admin_menu');
  * Регистрируем шорткоды
  */
 $shortcode = 'videosurfpro-video';
-add_shortcode($shortcode, function($request) {
-    if(is_admin()) {
+add_shortcode($shortcode, function ($request) {
+    if (is_admin()) {
         return '';
-    }
-    else {
+    } else {
         $video_id = $request['id'];
         $video = Videosurfpro_Video::get_all_video_data_from_db($video_id);
-        if(empty($video)) {
+        if (empty($video)) {
             $result = 'Your Video is not exists on the Database';
             return $result;
         }
         $video = $video[0];
-        $result = '<iframe title="'. $video->video_name .'" width="640" height="360" src="https://www.youtube.com/embed/' . $video->video_id . '?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>';
+        $result = '<iframe title="' . $video->video_name . '" width="640" height="360" src="https://www.youtube.com/embed/' . $video->video_id . '?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>';
         return $result;
     }
 });
 
 $shortcode = 'videosurfpro-videos-page';
-add_shortcode($shortcode, function($request) {
-    if(is_admin()) {
+add_shortcode($shortcode, function ($request) {
+    if (is_admin()) {
         return '';
-    }
-    else {
-        $html = 'Hello, I am your shortcode';
+    } else {
+        // GET DATA
+        if (isset($_POST['videos_sortby_views'])) {
+            // Нужно реализовать получение сортированных видео по просмотрах
+            $videos = Videosurfpro_Video::get_all_videos();
+
+        } else if (isset($_POST['videos_sortby_latest'])) {
+            $all_orderby_latest_videos = Videosurfpro_Video::get_all_videos_orderby_latest_desc();
+            $videos = $all_orderby_latest_videos;
+        }
+        else {
+            $all_videos = Videosurfpro_Video::get_all_videos();
+            $videos = $all_videos;
+        }
+        $html = "";
+        $content = "";
+        $domain = get_site_url();
+        $videos_sort_div = "
+        <div>
+            <form action='' method='POST'>
+                <input type='submit' name='videos_sortby_views' value='Sort by Views'>
+            </form>
+            <form action='' method='POST'>
+                <input type='submit' name='videos_sortby_latest' value='Latest Videos'>
+            </form>
+        </div>
+    ";
+        $content .= $videos_sort_div;
+
+        $latest_videos = "<div style='margin:0; display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px;'>";
+        // INSERT DATA
+        foreach ($videos as $video) {
+            if (Videosurfpro_Video::is_exists_youtube_video_thumbnail($video->video_id) == true) {
+                $latest_videos .= '
+                <a href="' . $domain . '/?videosurfpro_video_id=' . $video->id . '">
+                    <img src="http://img.youtube.com/vi/' . $video->video_id . '/maxresdefault.jpg" />
+                </a>
+            ';
+            }
+        }
+        $latest_videos .= '</div';
+
+        // RETURN DATA
+        $content .= $latest_videos;
+        $html .= $content;
         return $html;
+    }
+});
+
+/**
+ * Creat a custom template for single videos
+ */
+
+add_filter('init', function ($template) {
+    if (isset($_GET['videosurfpro_video_id'])) {
+        $videosurfpro_video_id = $_GET['videosurfpro_video_id'];
+        $video = Videosurfpro_Video::get_all_video_data_from_db($videosurfpro_video_id);
+        $html = "";
+        if (empty($video)) {
+            $html .= 'Видео с указанным идентификатором не существует';
+        } else {
+            $video = $video[0];
+            $video_iframe = '
+                <div>
+                    <iframe title="' . $video->video_name . '" width="640" height="360" src="https://www.youtube.com/embed/' . $video->video_id . '?feature=oembed" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+                </div>
+            ';
+            $html .= $video_iframe;
+        }
+        include plugin_dir_path(__FILE__) . 'public/partials/videosurfpro-single-video.php';
+        die();
     }
 });
