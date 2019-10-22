@@ -15,6 +15,8 @@
 //require __DIR__ . '/../classes/class-videosurfpro-video.php';
 use admin\classes\Videosurfpro_Video;
 
+$domain = get_site_url();
+
 // Нужно для пагинации
 $items_on_page = 3;
 $current_page = (isset($_GET['paged']) && $_GET['paged'] > 0) ? (int)$_GET['paged'] : 1;
@@ -268,16 +270,12 @@ $next_page = $current_page + 1;
                             </td>
                             <td>
                                 <form action="" method="POST">
-                                    <input type="hidden" name="video_id" value="<?= $videos_with_pagination[$i]->id ?>">
+                                    <input type="hidden" name="video_id" value="<?=$videos_with_pagination[$i]->id ?>">
                                     <input type="submit" name="delete_video_by_id" class="button" value="Delete">
                                 </form>
                             </td>
                             <td>
-                                <form action="" method="POST">
-                                    <input type="hidden" name="show_video_by_id"
-                                           value="<?= $videos_with_pagination[$i]->id ?>">
-                                    <input type="submit" class="button" value="Show">
-                                </form>
+                                <a href="<?=$domain ?>/?videosurfpro_video_id=<?=$videos_with_pagination[$i]->id ?>" target="_blank"><input type="submit" class="button" value="Show"></a>
                             </td>
                         </tr>
                         <!--                <tr>-->
