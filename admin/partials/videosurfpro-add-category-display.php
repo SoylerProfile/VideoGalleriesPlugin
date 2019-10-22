@@ -17,7 +17,7 @@ if(isset($_POST['submit'])) {
     $category_name = $_POST['category_name'];
     $category_slug = 'SLUG';
     $category_description = $_POST['category_description'];
-    $category_created_at = date("m.d.y");
+    $category_created_at = date("Y-m-d H:i:s");
     $category_seo_title = $_POST['category_seo_title'];
     $category_seo_description = $_POST['category_seo_description'];
     $category_seo_keywords = $_POST['category_seo_keywords'];

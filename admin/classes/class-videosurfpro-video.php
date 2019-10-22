@@ -15,14 +15,14 @@ class Videosurfpro_Video
     private $video_link;
     private $video_id;
     private $video_provider;
-    private $video_category;
+    private $video_category_id;
     private $video_author_id;
     private $video_created_at;
     private $video_seo_title;
     private $video_seo_description;
     private $video_seo_keywords;
 
-    public function __construct($video_name, $video_slug, $video_description, $video_link, $video_id, $video_provider, $video_category, $video_author_id, $video_created_at, $video_seo_title, $video_seo_description, $video_seo_keywords)
+    public function __construct($video_name, $video_slug, $video_description, $video_link, $video_id, $video_provider, $video_category_id, $video_author_id, $video_created_at, $video_seo_title, $video_seo_description, $video_seo_keywords)
     {
         $this->video_name = $video_name;
         $this->video_slug = $video_slug;
@@ -30,7 +30,7 @@ class Videosurfpro_Video
         $this->video_link = $video_link;
         $this->video_id = $video_id;
         $this->video_provider = $video_provider;
-        $this->video_category = $video_category;
+        $this->video_category_id = $video_category_id;
         $this->video_author_id = $video_author_id;
         $this->video_created_at = $video_created_at;
         $this->video_seo_title = $video_seo_title;
@@ -62,7 +62,7 @@ class Videosurfpro_Video
                     'video_link' => $this->video_link,
                     'video_id' => $this->video_id,
                     'video_provider' => $this->video_provider,
-                    'video_category' => $this->video_category,
+                    'video_category_id' => $this->video_category_id,
                     'video_author_id' => $this->video_author_id,
                     'video_created_at' => $this->video_created_at,
                     'video_seo_title' => $this->video_seo_title,
@@ -136,7 +136,7 @@ class Videosurfpro_Video
         echo 'video_link - ' . $this->video_link . "<br>";
         echo 'video_id - ' . $this->video_id . "<br>";
         echo 'video_provider - ' . $this->video_provider . "<br>";
-        echo 'video_category - ' . $this->video_category . "<br>";
+        echo 'video_category_id - ' . $this->video_category_id . "<br>";
         echo 'video_author_id - ' . $this->video_author_id . "<br>";
         echo 'video_created_at - ' . $this->video_created_at . "<br>";
         echo 'video_seo_title - ' . $this->video_seo_title . "<br>";
@@ -151,7 +151,7 @@ class Videosurfpro_Video
         $this->video_link = htmlspecialchars(strip_tags(stripslashes(trim($this->video_link))));
 //        $this->video_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_id))));
         $this->video_provider = htmlspecialchars(strip_tags(stripslashes(trim($this->video_provider))));
-        $this->video_category = htmlspecialchars(strip_tags(stripslashes(trim($this->video_category))));
+        $this->video_category_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_category_id))));
         $this->video_author_id = htmlspecialchars(strip_tags(stripslashes(trim($this->video_author_id))));
         $this->video_seo_title = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_title))));
         $this->video_seo_description = htmlspecialchars(strip_tags(stripslashes(trim($this->video_seo_description))));
@@ -162,7 +162,7 @@ class Videosurfpro_Video
         $this->video_description = $this->remove_emoji($this->video_description);
 //        $this->video_id = $this->remove_emoji($this->video_id);
         $this->video_provider = $this->remove_emoji($this->video_provider);
-        $this->video_category = $this->remove_emoji($this->video_category);
+        $this->video_category_id = $this->remove_emoji($this->video_category_id);
         $this->video_author_id = $this->remove_emoji($this->video_author_id);
         $this->video_seo_title = $this->remove_emoji($this->video_seo_title);
         $this->video_seo_description = $this->remove_emoji($this->video_seo_description);
@@ -203,11 +203,11 @@ class Videosurfpro_Video
         return $video_data;
     }
 
-    public static function update_video_data($id, $video_name, $video_slug, $video_description, $video_category, $video_seo_title, $video_seo_description, $video_seo_keywords) {
+    public static function update_video_data($id, $video_name, $video_slug, $video_description, $video_category_id, $video_seo_title, $video_seo_description, $video_seo_keywords) {
         global $wpdb;
         $table = $wpdb->prefix . VIDEOS_TABLE;
         $result = $wpdb->update($table,
-            array('video_name' => $video_name, 'video_slug' => $video_slug, 'video_description' => $video_description, 'video_category' => $video_category, 'video_seo_title' => $video_seo_title, 'video_seo_description' => $video_seo_description, 'video_seo_keywords' => $video_seo_keywords),
+            array('video_name' => $video_name, 'video_slug' => $video_slug, 'video_description' => $video_description, 'video_category_id' => $video_category_id, 'video_seo_title' => $video_seo_title, 'video_seo_description' => $video_seo_description, 'video_seo_keywords' => $video_seo_keywords),
             array('id' => $id)
         );
         return $result;
