@@ -70,23 +70,6 @@ class Videosurfpro_Category
         return $all_categories;
     }
 
-    public static function get_categories_with_pagination($current_page, $items_on_page) {
-        $start = ($current_page * $items_on_page) - $items_on_page;
-        global $wpdb;
-        $table = $wpdb->prefix . CATEGORIES_TABLE;
-        $sql = "SELECT * FROM `$table` LIMIT $start,$items_on_page";
-        $all_categories = $wpdb->get_results($sql);
-        return $all_categories;
-    }
-
-    public static function search_categories($text) {
-        global $wpdb;
-        $table = $wpdb->prefix . CATEGORIES_TABLE;
-        $sql = "SELECT * FROM `$table` WHERE `category_name` LIKE '%".$text."%'";
-        $all_categories = $wpdb->get_results($sql);
-        return $all_categories;
-    }
-
     public function print_all_data() {
         echo 'video_name - ' . $this->video_name . "<br>";
         echo 'video_slug - ' . $this->video_slug . "<br>";

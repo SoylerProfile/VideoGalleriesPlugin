@@ -2,8 +2,6 @@
 
 namespace admin\classes;
 
-//require __DIR__ . '/../../libraries/YouTubeAPI/class-video-data-getter.php';
-
 use libraries\YouTubeAPI\DataGetter;
 
 class Videosurfpro_Video
@@ -45,7 +43,6 @@ class Videosurfpro_Video
             //нужно отрефакторить, создать класс валидатор
             $this->validate_all_data();
 //            $this->print_all_data();
-//            $string = strval($this->video_description);
 //            die();
 
             // code if data is ok
@@ -106,25 +103,6 @@ class Videosurfpro_Video
         $table = $wpdb->prefix . VIDEOS_TABLE;
         $current_user_id = get_current_user_id();
         $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id";
-        $all_videos = $wpdb->get_results($sql);
-        return $all_videos;
-    }
-
-    public static function get_videos_with_pagination($current_page, $items_on_page) {
-        $start = ($current_page * $items_on_page) - $items_on_page;
-        global $wpdb;
-        $table = $wpdb->prefix . VIDEOS_TABLE;
-        $current_user_id = get_current_user_id();
-        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id LIMIT $start,$items_on_page";
-        $all_videos = $wpdb->get_results($sql);
-        return $all_videos;
-    }
-
-    public static function search_videos($text) {
-        global $wpdb;
-        $table = $wpdb->prefix . VIDEOS_TABLE;
-        $current_user_id = get_current_user_id();
-        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id AND `video_name` LIKE '%".$text."%'";
         $all_videos = $wpdb->get_results($sql);
         return $all_videos;
     }
@@ -234,32 +212,6 @@ class Videosurfpro_Video
         $all_latest_videos = $wpdb->get_results($sql);
         return $all_latest_videos;
     }
-
-    // check if YouTube Video thumbnail exists
-//    public static function is_exists_youtube_video_thumbnail($video_id) {
-//        $item = $video_id;
-//        $MaxResURL = 'https://i1.ytimg.com/vi/'.$item.'/maxresdefault.jpg';
-//        //print $MaxResURL;
-//
-//        $curl = curl_init();
-//        curl_setopt_array($curl, array(
-//            CURLOPT_URL => $MaxResURL,
-//            CURLOPT_HEADER => true,
-//            CURLOPT_RETURNTRANSFER => true,
-//            CURLOPT_NOBODY => true));
-//
-//        $header = explode("\n", curl_exec($curl));
-//        curl_close($curl);
-//
-//        //var_dump($header);
-//
-//        //If maxres image exists do something with it.
-//        if (strpos($header[0], '200') !== false) {
-//            return true;
-//        }else{
-//            return false;
-//        }
-//    }
 
     public static function get_all_videos_orderby_views_desc () {
         global $wpdb;

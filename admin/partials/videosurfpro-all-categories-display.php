@@ -14,18 +14,7 @@
 
 use admin\classes\Videosurfpro_Category;
 
-// Нужно для пагинации
-$items_on_page = 9999;
-$current_page = (isset($_GET['paged']) && $_GET['paged'] > 0) ? (int) $_GET['paged'] : 1;
 $all_categories = Videosurfpro_Category::get_all_categories();
-$categories_with_pagination = Videosurfpro_Category::get_categories_with_pagination($current_page, $items_on_page);
-
-// Реализация поиска категории
-if(isset($_POST['search_categories'])) {
-    $text = $_POST['text'];
-    $all_categories = Videosurfpro_Category::search_categories($text);
-    $categories_with_pagination = $all_categories;
-}
 
 if(isset($_POST['delete_category_by_id'])) {
     $category_id = $_POST['category_id'];
@@ -42,89 +31,9 @@ if(isset($_POST['delete_category_by_id'])) {
 }
 
 ?>
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<!--<style>-->
-<!--    #videosurfpro-all-categories-container {-->
-<!--        margin: 25px;-->
-<!--        margin-left: 0;-->
-<!--        margin-top: 10px;-->
-<!--        background-color: #ffffff;-->
-<!--        text-align: center;-->
-<!--    }-->
-<!--    .videosurfpro-single-category-container {-->
-<!--        display: grid;-->
-<!--        grid-template-columns: 1fr 6fr 3fr 3fr;-->
-<!--        padding: 10px;-->
-<!--    }-->
-<!--    #videosurfpro-categories-filter {-->
-<!--        margin: 25px;-->
-<!--        margin-left: 0;-->
-<!--        margin-bottom: 0;-->
-<!--        background-color: #ffffff;-->
-<!--        text-align: center;-->
-<!--        display: grid;-->
-<!--        grid-template-columns: 1fr 1fr;-->
-<!--    }-->
-<!--    .videosurfpro-categories-filter-element {-->
-<!--        padding: 10px;-->
-<!--    }-->
-<!---->
-<!--    /*  PAGINATION    */-->
-<!--    .pagination {-->
-<!--        display: inline-block;-->
-<!--        margin: 15px;-->
-<!--        margin-bottom: 0;-->
-<!--    }-->
-<!---->
-<!--    .pagination a {-->
-<!--        color: black;-->
-<!--        float: left;-->
-<!--        padding: 8px 16px;-->
-<!--        text-decoration: none;-->
-<!--    }-->
-<!---->
-<!--    .pagination a.active {-->
-<!--        background-color: #4CAF50;-->
-<!--        color: white;-->
-<!--        border-radius: 5px;-->
-<!--    }-->
-<!---->
-<!--    .pagination a:hover:not(.active) {-->
-<!--        background-color: #ddd;-->
-<!--        border-radius: 5px;-->
-<!--    }-->
-<!---->
-<!--    hr {-->
-<!--        margin: 0;-->
-<!--    }-->
-<!--</style>-->
-<!---->
-<!--<h1>ALL Categories</h1>-->
-
-<!--    FILTER    -->
-<!--<div id="videosurfpro-categories-filter">-->
-<!--    <div class="videosurfpro-categories-filter-element">-->
-<!--        <span>--><?php //echo count($all_categories); ?><!-- Categories</span>-->
-<!--    </div>-->
-<!--    <div class="videosurfpro-categories-filter-element">-->
-<!--        <form action="" method="POST">-->
-<!--            <input type="search" name="text" value="" placeholder="Type category name..." >-->
-<!--            <input type="submit" name="search_categories" class="button" value="Search Categories">-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
-<!---->
-<!--    PAGINATION    -->
-<?php
-$pages = ceil(count($all_categories) / $items_on_page);
-$previous_page = $current_page - 1;
-$next_page = $current_page + 1;
-?>
-
 
 <link rel="stylesheet" type="text/css"
-      href="<?php echo plugins_url('videosurfpro'); ?>/admin/assets/css/bamburgh.min.css">
-
+      href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
 <br/>
     <div class="container">
       <h1>Categories</h1>
@@ -139,16 +48,16 @@ $next_page = $current_page + 1;
                 </tr>
                 </thead>
                 <tbody>
-                <?php if (count($categories_with_pagination) >= 1) : ?>
-                    <?php for ($i = 0; $i < count($categories_with_pagination); $i++) : ?>
-                        <tr class="videosurfpro-single-video-container <?php echo ($categories_with_pagination[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
-                            <td><?= $categories_with_pagination[$i]->id ?></td>
-                            <td><?= $categories_with_pagination[$i]->category_name ?></td>
+                <?php if (count($all_categories) >= 1) : ?>
+                    <?php for ($i = 0; $i < count($all_categories); $i++) : ?>
+                        <tr class="videosurfpro-single-video-container <?php echo ($all_categories[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
+                            <td><?= $all_categories[$i]->id ?></td>
+                            <td><?= $all_categories[$i]->category_name ?></td>
                             <td class="text-center">
-                                <form action="?page=videosurfpro_submenu_edit_category&category_id=<?= $categories_with_pagination[$i]->id ?>"
+                                <form action="?page=videosurfpro_submenu_edit_category&category_id=<?= $all_categories[$i]->id ?>"
                                       method="POST">
                                     <input type="hidden" name="edit_category_by_id"
-                                           value="<?= $categories_with_pagination[$i]->id ?>">
+                                           value="<?= $all_categories[$i]->id ?>">
                                     <button type="submit" name="edit_category_by_id" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit category">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -156,7 +65,7 @@ $next_page = $current_page + 1;
                             </td>
                             <td>
                                 <form action="" method="POST">
-                                    <input type="hidden" name="category_id" value="<?= $categories_with_pagination[$i]->id ?>">
+                                    <input type="hidden" name="category_id" value="<?= $all_categories[$i]->id ?>">
                                     <button type="submit" name="delete_category_by_id" class="btn btn-outline-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete category?">
                                       <i class="far fa-trash-alt"></i>
                                     </button>
