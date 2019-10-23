@@ -15,7 +15,7 @@
 use admin\classes\Videosurfpro_Category;
 
 // Нужно для пагинации
-$items_on_page = 3;
+$items_on_page = 9999;
 $current_page = (isset($_GET['paged']) && $_GET['paged'] > 0) ? (int) $_GET['paged'] : 1;
 $all_categories = Videosurfpro_Category::get_all_categories();
 $categories_with_pagination = Videosurfpro_Category::get_categories_with_pagination($current_page, $items_on_page);
@@ -120,97 +120,22 @@ $pages = ceil(count($all_categories) / $items_on_page);
 $previous_page = $current_page - 1;
 $next_page = $current_page + 1;
 ?>
-<!---->
-<!--    VIDEOS    -->
-<!--<div id="videosurfpro-all-categories-container">-->
-<!--    <hr>-->
-<!--    --><?php //if(count($categories_with_pagination) >= 1) : ?>
-<!--        --><?php //for($i = 0; $i < count($categories_with_pagination); $i++) : ?>
-<!--            <div class="videosurfpro-single-category-container --><?php //echo ($categories_with_pagination[$i]->video_is_published == 'FALSE') ? 'videosurfpro-category-draft' : '' ?><!--">-->
-<!--                <div>--><?//=$categories_with_pagination[$i]->id?><!--</div>-->
-<!--                <div>--><?//=$categories_with_pagination[$i]->category_name?><!--</div>-->
-<!--                <div>-->
-<!--                    <form action="?page=videosurfpro_submenu_edit_category&category_id=--><?//=$categories_with_pagination[$i]->id?><!--" method="POST">-->
-<!--                        <input type="hidden" name="edit_category_by_id" value="--><?//=$categories_with_pagination[$i]->id?><!--">-->
-<!--                        <input type="submit" class="button" value="Edit">-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <form action="" method="POST">-->
-<!--                        <input type="hidden" name="category_id" value="--><?//=$categories_with_pagination[$i]->id?><!--">-->
-<!--                        <input type="submit" name="delete_category_by_id" class="button" value="Delete">-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        --><?php //endfor; ?>
-<!--    --><?php //else : ?>
-<!--        <div style="padding: 15px;">No Categories found.</div>-->
-<!--    --><?php //endif; ?>
-<!--</div>-->
-<!---->
-<!--    PAGINATION    -->
-<!--<div class="pagination">-->
-<!--    --><?php //if($pages > 1) : ?>
-<!--        --><?php //if($previous_page >= 1) : ?>
-<!--            <a href="?page=videosurfpro_submenu_all_categories&paged=--><?//=$previous_page?><!--">&laquo;</a>-->
-<!--        --><?php //endif; ?>
-<!--        <a href="?page=videosurfpro_submenu_all_categories&paged=--><?//=$current_page?><!--">--><?//=$current_page?><!--</a>-->
-<!--        --><?php //if(count($all_categories) > $current_page * $items_on_page) : ?>
-<!--            <a href="?page=videosurfpro_submenu_all_categories&paged=--><?//=$next_page?><!--">&raquo;</a>-->
-<!--        --><?php //endif; ?>
-<!--    --><?php //endif;?>
-<!--</div>-->
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/>
-
-<!-- Disable tap highlight on IE -->
-<meta name="msapplication-tap-highlight" content="no">
-
-<!-- Bamburgh Z Admin Dashboard PRO Stylesheets -->
 
 <link rel="stylesheet" type="text/css"
       href="<?php echo plugins_url('videosurfpro'); ?>/admin/assets/css/bamburgh.min.css">
 
-<div class="app-wrapper">
-    <!--    <div class="row"><div class="col-md-6 d-flex align-items-center"><div class="dt-buttons btn-group"><button class="btn btn-secondary buttons-copy buttons-html5" tabindex="0" aria-controls="example" type="button"><span>Copy</span></button> </div></div><div class="col-md-6 d-flex align-items-center">-->
-    <!--            <div id="example_filter" class="dataTables_filter"><label>Search:-->
-    <!--                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example">-->
-    <!--                    <form action="" method="POST">-->
-    <!--                        <input type="search" name="text" value="" class="form-control form-control-sm" placeholder="" aria-controls="example" >-->
-    <!--                        <input type="submit" name="search_videos" class="button" value="Search Videos">-->
-    <!--                    </form>-->
-    <!--                </label></div></div><div class="col-md-12"><div class="divider"></div><div class="dataTables_info" id="example_info" role="status" aria-live="polite">--><?php //echo count($all_videos); ?><!-- Videos</div></div></div>-->
+<br/>
     <div class="container">
-        <div class="card card-box mb-5">
-            <div class="card-header">
-                <div class="card-header--title">
-                    <small>DataTables</small>
-                    <b>Categories</b>
-                </div>
-                <!--                <div class="card-header--actions">-->
-                <!--                    <a href="#" class="btn btn-sm btn-success" data-toggle="tooltip" title="Refresh">-->
-                <!--                        <i class="fas fa-sync fa-spin"></i>-->
-                <!--                    </a>-->
-                <!--                </div>-->
-            </div>
-            <table id="example" class="table table-hover" data-toggle="datatable">
-                <div class="row"><div class="col-md-6 d-flex align-items-center"></div><div class="col-md-6 d-flex align-items-center">
-                        <div id="example_filter" class="dataTables_filter"><label>
-                                <!--                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example">-->
-                                <form action="" method="POST">
-                                    <input type="search" name="text" value="" class="form-control form-control-sm" placeholder="" aria-controls="example" >
-                                    <input type="submit" name="search_categories" class="button" value="Search Categories">
-                                </form>
-                            </label></div></div><div class="col-md-12"><div class="divider"></div><div class="dataTables_info" id="example_info" role="status" aria-live="polite"><?php echo count($all_categories); ?> Categories</div></div></div>
+      <h1>Categories</h1>
+
+            <table id="categories" class="table table-hover" data-toggle="datatable">
                 <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
                     <th class="no-sort text-center">Actions</th>
-                    <th class="no-sort text-center">Actions</th>
-                    <!--                    <th>Start date</th>-->
-                    <!--                    <th class="no-sort text-center">Actions</th>-->
+                    <th class="no-sort"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -219,36 +144,25 @@ $next_page = $current_page + 1;
                         <tr class="videosurfpro-single-video-container <?php echo ($categories_with_pagination[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
                             <td><?= $categories_with_pagination[$i]->id ?></td>
                             <td><?= $categories_with_pagination[$i]->category_name ?></td>
-                            <td>
+                            <td class="text-center">
                                 <form action="?page=videosurfpro_submenu_edit_category&category_id=<?= $categories_with_pagination[$i]->id ?>"
                                       method="POST">
                                     <input type="hidden" name="edit_category_by_id"
                                            value="<?= $categories_with_pagination[$i]->id ?>">
-                                    <input type="submit" class="button" value="Edit">
+                                    <button type="submit" name="edit_category_by_id" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit category">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                 </form>
                             </td>
                             <td>
                                 <form action="" method="POST">
                                     <input type="hidden" name="category_id" value="<?= $categories_with_pagination[$i]->id ?>">
-                                    <input type="submit" name="delete_category_by_id" class="button" value="Delete">
+                                    <button type="submit" name="delete_category_by_id" class="btn btn-outline-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete category?">
+                                      <i class="far fa-trash-alt"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>
-                        <!--                <tr>-->
-                        <!--                    <td>Tiger Nixon</td>-->
-                        <!--                    <td>System Architect</td>-->
-                        <!--                    <td>Edinburgh</td>-->
-                        <!--                    <td>61</td>-->
-                        <!--                    <td>2011/04/25</td>-->
-                        <!--                    <td class="text-center">-->
-                        <!--                        <a href="#" class="btn btn-first pl-2 pr-2 btn-sm ml-1 mr-1" title="View details">-->
-                        <!--                            <i class="fas fa-binoculars"></i>-->
-                        <!--                        </a>-->
-                        <!--                        <a href="#" class="btn btn-outline-danger pl-2 pr-2 btn-sm ml-1 mr-1" title="Remove">-->
-                        <!--                            <i class="far fa-trash-alt"></i>-->
-                        <!--                        </a>-->
-                        <!--                    </td>-->
-                        <!--                </tr>-->
                     <?php endfor; ?>
                 <?php else : ?>
                     <div style="padding: 15px;">No Categories found.</div>
@@ -259,88 +173,46 @@ $next_page = $current_page + 1;
                     <th>ID</th>
                     <th>Name</th>
                     <th class="no-sort text-center">Actions</th>
-                    <th class="no-sort text-center">Actions</th>
+                    <th class="no-sort"></th>
                 </tr>
                 </tfoot>
             </table>
-            <div class="dataTables_paginate paging_simple_numbers" id="example_paginate"><ul class="pagination">
-                    <?php if($pages > 1) : ?>
-                        <?php if($previous_page >= 1) : ?>
-                            <li class="paginate_button page-item previous" id="example_previous">
-                                <a href="?page=videosurfpro_submenu_all_categories&paged=<?=$previous_page?>" aria-controls="example" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
-                            </li>
-                        <?php endif; ?>
-                        <li class="paginate_button page-item active">
-                            <a href="?page=videosurfpro_submenu_all_categories&paged=<?=$current_page?>" aria-controls="example" data-dt-idx="1" tabindex="0" class="page-link"><?=$current_page?></a>
-                        </li>
-                        <!--                        <li class="paginate_button page-item ">-->
-                        <!--                            <a href="#" aria-controls="example" data-dt-idx="2" tabindex="0" class="page-link">2</a>-->
-                        <!--                        </li>-->
-                        <!--                        <li class="paginate_button page-item ">-->
-                        <!--                            <a href="#" aria-controls="example" data-dt-idx="3" tabindex="0" class="page-link">3</a>-->
-                        <!--                        </li>-->
-                        <?php if(count($all_categories) > $current_page * $items_on_page) : ?>
-                            <li class="paginate_button page-item next" id="example_next">
-                                <a href="?page=videosurfpro_submenu_all_categories&paged=<?=$next_page?>" aria-controls="example" data-dt-idx="8" tabindex="0" class="page-link">Next</a>
-                            </li>
-                        <?php endif; ?>
-                    <?php endif;?>
-                </ul>
-            </div>
-            <!--            <div class="pagination">-->
-            <!--                --><?php //if($pages > 1) : ?>
-            <!--                    --><?php //if($previous_page >= 1) : ?>
-            <!--                        <a href="?page=videosurfpro_submenu_all_videos&paged=--><?// //=$previous_page?><!--">&laquo;</a>-->
-            <!--                    --><?php //endif; ?>
-            <!--                    <a href="?page=videosurfpro_submenu_all_videos&paged=--><?//=$current_page?><!--">--><?//=$current_page?><!--</a>-->
-            <!--                    --><?php //if(count($all_videos) > $current_page * $items_on_page) : ?>
-            <!--                        <a href="?page=videosurfpro_submenu_all_videos&paged=--><?// //=$next_page?><!--">&raquo;</a>-->
-            <!--                    --><?php //endif; ?>
-            <!--                --><?php //endif;?>
-            <!--            </div>-->
+
         </div>
-    </div>
-</div>
-<!-- Bamburgh Z Admin Dashboard PRO Javascript Core -->
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-
-<!--Bootstrap init-->
-
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/js/demo/bootstrap/bootstrap.min.js"></script>
 
 
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/js/bamburgh.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous"></script>
+        <script src="/wp-content/plugins/videosurfpro/admin/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+        <!--Bootstrap init-->
+
+        <script src="/wp-content/plugins/videosurfpro/admin/assets/js/demo/bootstrap/bootstrap.min.js"></script>
 
 
-<!--DataTables-->
+        <script src="/wp-content/plugins/videosurfpro/admin/assets/js/bamburgh.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/fixedheader/3.1.4/css/fixedHeader.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/keytable/2.5.0/css/keyTable.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/responsive/2.2.2/css/responsive.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/scroller/2.0.0/css/scroller.bootstrap4.min.css"/>
 
-<script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/keytable/2.5.0/js/dataTables.keyTable.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.2/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.2/js/responsive.bootstrap4.min.js"></script>
+        <!--DataTables-->
 
-<!--Datatables init-->
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/js/demo/datatables/datatables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"/>
+
+
+        <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.bootstrap4.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/keytable/2.5.0/js/dataTables.keyTable.min.js"></script>
+
+
+        <!--Datatables init-->
+        <script src="/wp-content/plugins/videosurfpro/admin/assets/js/demo/datatables/datatables.min.js"></script>
+
+        <script type="text/javascript">
+        $(".col-md-6").removeClass("d-flex align-items-center");
+        </script>

@@ -18,7 +18,7 @@ use admin\classes\Videosurfpro_Video;
 $domain = get_site_url();
 
 // Нужно для пагинации
-$items_on_page = 3;
+$items_on_page = 99999;
 $current_page = (isset($_GET['paged']) && $_GET['paged'] > 0) ? (int)$_GET['paged'] : 1;
 $all_videos = Videosurfpro_Video::get_all_videos();
 $videos_with_pagination = Videosurfpro_Video::get_videos_with_pagination($current_page, $items_on_page);
@@ -51,6 +51,10 @@ if (isset($_POST['delete_video_by_id'])) {
 }
 
 ?>
+<link rel="stylesheet" type="text/css"
+      href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
+
+
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <!---->
 <!--<style>-->
@@ -195,18 +199,6 @@ $next_page = $current_page + 1;
 <!--    --><?php //endif;?>
 <!--</div>-->
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no"/>
-
-<!-- Disable tap highlight on IE -->
-<meta name="msapplication-tap-highlight" content="no">
-
-<!-- Bamburgh Z Admin Dashboard PRO Stylesheets -->
-
-<link rel="stylesheet" type="text/css"
-      href="<?php echo plugins_url('videosurfpro'); ?>/admin/assets/css/bamburgh.min.css">
-
-<div class="app-wrapper">
 <!--    <div class="row"><div class="col-md-6 d-flex align-items-center"><div class="dt-buttons btn-group"><button class="btn btn-secondary buttons-copy buttons-html5" tabindex="0" aria-controls="example" type="button"><span>Copy</span></button> </div></div><div class="col-md-6 d-flex align-items-center">-->
 <!--            <div id="example_filter" class="dataTables_filter"><label>Search:-->
 <!--                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example">-->
@@ -215,28 +207,18 @@ $next_page = $current_page + 1;
 <!--                        <input type="submit" name="search_videos" class="button" value="Search Videos">-->
 <!--                    </form>-->
 <!--                </label></div></div><div class="col-md-12"><div class="divider"></div><div class="dataTables_info" id="example_info" role="status" aria-live="polite">--><?php //echo count($all_videos); ?><!-- Videos</div></div></div>-->
-    <div class="container">
-        <div class="card card-box mb-5">
-            <div class="card-header">
-                <div class="card-header--title">
-                    <small>DataTables</small>
-                    <b>Videos</b>
-                </div>
-<!--                <div class="card-header--actions">-->
-<!--                    <a href="#" class="btn btn-sm btn-success" data-toggle="tooltip" title="Refresh">-->
-<!--                        <i class="fas fa-sync fa-spin"></i>-->
-<!--                    </a>-->
-<!--                </div>-->
-            </div>
+<br/>
+<div class="container">
+  <h1>Videos</h1>
             <table id="example" class="table table-hover" data-toggle="datatable">
-                <div class="row"><div class="col-md-6 d-flex align-items-center"></div><div class="col-md-6 d-flex align-items-center">
+              <!--  <div class="row"><div class="col-md-6 d-flex align-items-center"></div><div class="col-md-6 d-flex align-items-center">
                         <div id="example_filter" class="dataTables_filter"><label>
-                                <!--                    <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example">-->
+                                                <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="example">
                                 <form action="" method="POST">
                                     <input type="search" name="text" value="" class="form-control form-control-sm" placeholder="" aria-controls="example" >
                                     <input type="submit" name="search_videos" class="button" value="Search Videos">
                                 </form>
-                            </label></div></div><div class="col-md-12"><div class="divider"></div><div class="dataTables_info" id="example_info" role="status" aria-live="polite"><?php echo count($all_videos); ?> Videos</div></div></div>
+                            </label></div></div><div class="col-md-12"><div class="divider"></div><div class="dataTables_info" id="example_info" role="status" aria-live="polite"><?php echo count($all_videos); ?> Videos</div></div></div>-->
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -244,10 +226,8 @@ $next_page = $current_page + 1;
                     <th>Provider</th>
                     <th>Status</th>
                     <th class="no-sort text-center">Actions</th>
-                    <th class="no-sort text-center">Actions</th>
-                    <th class="no-sort text-center">Actions</th>
-                    <!--                    <th>Start date</th>-->
-                    <!--                    <th class="no-sort text-center">Actions</th>-->
+                    <th class="no-sort text-center"></th>
+                    <th class="no-sort text-center"></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -265,17 +245,21 @@ $next_page = $current_page + 1;
                                       method="POST">
                                     <input type="hidden" name="edit_video_by_id"
                                            value="<?= $videos_with_pagination[$i]->id ?>">
-                                    <input type="submit" class="button" value="Edit">
+                                    <button type="submit" name="edit_video_by_id" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit">
+                                      <i class="fas fa-edit"></i>
+                                    </button>
                                 </form>
                             </td>
                             <td>
                                 <form action="" method="POST">
                                     <input type="hidden" name="video_id" value="<?=$videos_with_pagination[$i]->id ?>">
-                                    <input type="submit" name="delete_video_by_id" class="button" value="Delete">
+                                    <button type="submit" name="delete_video_by_id" class="btn btn-outline-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete video?">
+                                      <i class="far fa-trash-alt"></i>
+                                    </button>
                                 </form>
                             </td>
                             <td>
-                                <a href="<?=$domain ?>/?videosurfpro_video_id=<?=$videos_with_pagination[$i]->id ?>" target="_blank"><input type="submit" class="button" value="Show"></a>
+                                <a href="<?=$domain ?>/?videosurfpro_video_id=<?=$videos_with_pagination[$i]->id ?>" class="btn btn-outline-success btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Watch video" target="_blank"><i class="far fa-eye"></i></a>
                             </td>
                         </tr>
                         <!--                <tr>-->
@@ -305,8 +289,8 @@ $next_page = $current_page + 1;
                     <th>Provider</th>
                     <th>Status</th>
                     <th class="no-sort text-center">Actions</th>
-                    <th class="no-sort text-center">Actions</th>
-                    <th class="no-sort text-center">Actions</th>
+                    <th class="no-sort text-center"></th>
+                    <th class="no-sort text-center"></th>
                 </tr>
                 </tfoot>
             </table>
@@ -345,10 +329,8 @@ $next_page = $current_page + 1;
 <!--                    --><?php //endif; ?>
 <!--                --><?php //endif;?>
 <!--            </div>-->
-        </div>
     </div>
-</div>
-<!-- Bamburgh Z Admin Dashboard PRO Javascript Core -->
+
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -356,38 +338,32 @@ $next_page = $current_page + 1;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="/wp-content/plugins/videosurfpro/admin/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 
 <!--Bootstrap init-->
 
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/js/demo/bootstrap/bootstrap.min.js"></script>
+<script src="/wp-content/plugins/videosurfpro/admin/assets/js/demo/bootstrap/bootstrap.min.js"></script>
 
 
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/js/bamburgh.min.js"></script>
+<script src="/wp-content/plugins/videosurfpro/admin/assets/js/bamburgh.min.js"></script>
 
 
 <!--DataTables-->
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/fixedheader/3.1.4/css/fixedHeader.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/keytable/2.5.0/css/keyTable.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/responsive/2.2.2/css/responsive.bootstrap4.min.css"/>
-<link rel="stylesheet" type="text/css"
-      href="https://cdn.datatables.net/scroller/2.0.0/css/scroller.bootstrap4.min.css"/>
+
 
 <script src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.bootstrap4.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.colVis.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/keytable/2.5.0/js/dataTables.keyTable.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.2/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.2/js/responsive.bootstrap4.min.js"></script>
+
 
 <!--Datatables init-->
-<script src="<?php plugins_url('videosurfpro'); ?>/admin/assets/js/demo/datatables/datatables.min.js"></script>
+<script src="/wp-content/plugins/videosurfpro/admin/assets/js/demo/datatables/datatables.min.js"></script>
+
+<script type="text/javascript">
+$(".col-md-6").removeClass("d-flex align-items-center");
+</script>
