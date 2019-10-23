@@ -20,13 +20,13 @@ class Videosurfpro_Video
     private $video_seo_description;
     private $video_seo_keywords;
 
-    public function __construct($video_name, $video_slug, $video_description, $video_link, $video_id, $video_provider, $video_category_id, $video_author_id, $video_created_at, $video_seo_title, $video_seo_description, $video_seo_keywords)
+    public function __construct($video_name, $video_slug, $video_description, $video_link, $video_provider, $video_category_id, $video_author_id, $video_created_at, $video_seo_title, $video_seo_description, $video_seo_keywords)
     {
         $this->video_name = $video_name;
         $this->video_slug = $video_slug;
         $this->video_description = $video_description;
         $this->video_link = $video_link;
-        $this->video_id = $video_id;
+//        $this->video_id = $video_id;
         $this->video_provider = $video_provider;
         $this->video_category_id = $video_category_id;
         $this->video_author_id = $video_author_id;
@@ -95,7 +95,6 @@ class Videosurfpro_Video
         $this->video_name = $video_data['items'][0]['snippet']['title'];
         $this->video_description = $video_data['items'][0]['snippet']['description'];
         $this->video_id = $video_data['items'][0]['id'];
-        $this->video_provider = 'YouTube'; // тут нужно будет подумать как работать без привязок к объектам или получать в форме провайдера
     }
 
     public static function get_all_videos() {
