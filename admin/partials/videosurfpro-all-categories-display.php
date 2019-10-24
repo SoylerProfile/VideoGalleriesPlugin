@@ -122,22 +122,31 @@ $all_categories = Videosurfpro_Category::get_all_categories();
             /**
              * Delete Category
              */
-            $('form#delete_category_form').on('submit', function(e) {
-                e.preventDefault();
-                form = $(this)[0];
-                var category_id = form.elements.category_id.value;
-                var data = {
-                    action: 'videosurfpro_delete_category',
-                    category_id: category_id,
-                };
-                // с версии 2.8 'ajaxurl' всегда определен в админке
-                jQuery.post( ajaxurl, data, function(response) {
-                    // alert('Получено с сервера: ' + response);
+            function ajax_delete_category() {
+                $('form#delete_category_form').on('submit', function(e) {
+                    e.preventDefault();
+                    form = $(this)[0];
+                    var category_id = form.elements.category_id.value;
+                    var data = {
+                        action: 'videosurfpro_delete_category',
+                        category_id: category_id,
+                    };
+                    // с версии 2.8 'ajaxurl' всегда определен в админке
+                    jQuery.post( ajaxurl, data, function(response) {
+                        // alert('Получено с сервера: ' + response);
+                    });
+                    // Delete the row
+                    let row_id = '#row_' + category_id;
+                    let row = $(row_id);
+                    row = row[0];
+                    row.remove();
                 });
-                // Delete the row
-                let row_id = '#row_' + category_id;
-                let row = $(row_id);
-                row = row[0];
-                row.remove();
+            }
+            // Get new elements for Ajax functions
+            let paginate_buttons = $('li.paginate_button');
+            paginate_buttons.click(function (){
+                ajax_delete_category()
             });
+            // Start JS code
+            ajax_delete_category()
         </script>
