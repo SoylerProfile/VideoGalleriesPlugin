@@ -37,6 +37,11 @@ add_action('admin_menu', 'videosurfpro_admin_menu');
 // Регистрируем шорткоды
 //add_action('init', 'videosurfpro_shortcodes_register');
 
+// Ajax функции плагина
+add_action('wp_ajax_videosurfpro_delete_video', 'videosurfpro_delete_video');
+add_action('wp_ajax_videosurfpro_delete_category', 'videosurfpro_delete_category');
+
+
 /**
  * Регистрируем шорткоды
  */

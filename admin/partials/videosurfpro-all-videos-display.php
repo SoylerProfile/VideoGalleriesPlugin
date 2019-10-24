@@ -25,21 +25,14 @@ if (isset($_GET['change_video_status'])) {
     Videosurfpro_Video::change_video_status($video_id, $new_status);
 }
 
-// Удаление видео
-if (isset($_POST['delete_video_by_id'])) {
-    $video_id = $_POST['video_id'];
-    $result = Videosurfpro_Video::delete_video_by_id($video_id);
-    if ($result) {
-        echo 'Your video was successfully deleted';
-    } else {
-        echo "Can not delete the video <br>";
-        echo "<pre>";
-        var_dump($result);
-        echo "</pre>";
-    }
-}
-
 ?>
+
+<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous">
+</script>
+
 <link rel="stylesheet" type="text/css"
       href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
 <br/>
@@ -60,7 +53,7 @@ if (isset($_POST['delete_video_by_id'])) {
                 <tbody>
                 <?php if (count($all_videos) >= 1) : ?>
                     <?php for ($i = 0; $i < count($all_videos); $i++) : ?>
-                        <tr class="videosurfpro-single-video-container <?php echo ($all_videos[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
+                        <tr id="row_<?= $all_videos[$i]->id ?>" class="videosurfpro-single-video-container <?php echo ($all_videos[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
                             <td><?= $all_videos[$i]->id ?></td>
                             <td><?= $all_videos[$i]->video_name ?></td>
                             <td><?= $all_videos[$i]->video_provider ?></td>
@@ -68,8 +61,7 @@ if (isset($_POST['delete_video_by_id'])) {
                                 <?php echo ($all_videos[$i]->video_is_published == 1) ? "<a style='color:green; cursor:pointer; text-decoration: none;' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=0&video_id=" . $all_videos[$i]->id . "'>Published</a>" : "<a style='color:red; cursor:pointer; text-decoration: none;' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=1&video_id=" . $all_videos[$i]->id . "'>Draft</a>" ?>
                             </td>
                             <td>
-                                <form action="?page=videosurfpro_submenu_edit_video&video_id=<?= $all_videos[$i]->id ?>"
-                                      method="POST">
+                                <form action="?page=videosurfpro_submenu_edit_video&video_id=<?= $all_videos[$i]->id ?>" method="POST" id="edit_video_form">
                                     <input type="hidden" name="edit_video_by_id"
                                            value="<?= $all_videos[$i]->id ?>">
                                     <button type="submit" name="edit_video_by_id" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit">
@@ -78,9 +70,9 @@ if (isset($_POST['delete_video_by_id'])) {
                                 </form>
                             </td>
                             <td>
-                                <form action="" method="POST">
-                                    <input type="hidden" name="video_id" value="<?=$all_videos[$i]->id ?>">
-                                    <button type="submit" name="delete_video_by_id" class="btn btn-outline-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete video?">
+                                <form action="" method="POST" id="delete_video_form" name="delete_video_form">
+                                    <input type="hidden" name="video_id" value="<?=$all_videos[$i]->id ?>" id="video_id">
+                                    <button type="submit" name="delete_video_by_id" class="btn btn-outline-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete video?" id="delete_video_by_id_btn">
                                       <i class="far fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -112,10 +104,10 @@ if (isset($_POST['delete_video_by_id'])) {
             </div>
     </div>
 
-
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+<!---->
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"-->
+<!--        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
+<!--        crossorigin="anonymous"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
@@ -147,4 +139,28 @@ if (isset($_POST['delete_video_by_id'])) {
 
 <script type="text/javascript">
 $(".col-md-6").removeClass("d-flex align-items-center");
+</script>
+
+<script type="text/javascript">
+    /**
+     * Delete Video
+     */
+    $('form#delete_video_form').on('submit', function(e) {
+        e.preventDefault();
+        form = $(this)[0];
+        var video_id = form.elements.video_id.value;
+        var data = {
+            action: 'videosurfpro_delete_video',
+            video_id: video_id,
+        };
+        // с версии 2.8 'ajaxurl' всегда определен в админке
+        jQuery.post( ajaxurl, data, function(response) {
+            // alert('Получено с сервера: ' + response);
+        });
+        // Delete the row
+        let row_id = '#row_' + video_id;
+        let row = $(row_id);
+        row = row[0];
+        row.remove();
+    });
 </script>

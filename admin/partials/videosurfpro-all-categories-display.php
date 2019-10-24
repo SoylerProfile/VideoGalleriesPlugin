@@ -16,21 +16,13 @@ use admin\classes\Videosurfpro_Category;
 
 $all_categories = Videosurfpro_Category::get_all_categories();
 
-if(isset($_POST['delete_category_by_id'])) {
-    $category_id = $_POST['category_id'];
-    $result = Videosurfpro_Category::delete_category_by_id($category_id);
-    if($result) {
-        echo 'Your category was successfully deleted';
-    }
-    else {
-        echo "Can not delete the category <br>";
-        echo "<pre>";
-        var_dump($result);
-        echo "</pre>";
-    }
-}
-
 ?>
+
+<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous">
+</script>
 
 <link rel="stylesheet" type="text/css"
       href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
@@ -50,7 +42,7 @@ if(isset($_POST['delete_category_by_id'])) {
                 <tbody>
                 <?php if (count($all_categories) >= 1) : ?>
                     <?php for ($i = 0; $i < count($all_categories); $i++) : ?>
-                        <tr class="videosurfpro-single-video-container <?php echo ($all_categories[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
+                        <tr id="row_<?= $all_categories[$i]->id ?>" class="videosurfpro-single-video-container <?php echo ($all_categories[$i]->video_is_published == 'FALSE') ? 'videosurfpro-video-draft' : '' ?>">
                             <td><?= $all_categories[$i]->id ?></td>
                             <td><?= $all_categories[$i]->category_name ?></td>
                             <td class="text-center">
@@ -64,8 +56,8 @@ if(isset($_POST['delete_category_by_id'])) {
                                 </form>
                             </td>
                             <td>
-                                <form action="" method="POST">
-                                    <input type="hidden" name="category_id" value="<?= $all_categories[$i]->id ?>">
+                                <form action="" method="POST" id="delete_category_form">
+                                    <input type="hidden" name="category_id" value="<?= $all_categories[$i]->id ?>" id="delete_category_form">
                                     <button type="submit" name="delete_category_by_id" class="btn btn-outline-danger btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete category?">
                                       <i class="far fa-trash-alt"></i>
                                     </button>
@@ -90,9 +82,9 @@ if(isset($_POST['delete_category_by_id'])) {
         </div>
 
 
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-                crossorigin="anonymous"></script>
+<!--        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"-->
+<!--                integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
+<!--                crossorigin="anonymous"></script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
                 integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
                 crossorigin="anonymous"></script>
@@ -124,4 +116,28 @@ if(isset($_POST['delete_category_by_id'])) {
 
         <script type="text/javascript">
         $(".col-md-6").removeClass("d-flex align-items-center");
+        </script>
+
+        <script type="text/javascript">
+            /**
+             * Delete Category
+             */
+            $('form#delete_category_form').on('submit', function(e) {
+                e.preventDefault();
+                form = $(this)[0];
+                var category_id = form.elements.category_id.value;
+                var data = {
+                    action: 'videosurfpro_delete_category',
+                    category_id: category_id,
+                };
+                // с версии 2.8 'ajaxurl' всегда определен в админке
+                jQuery.post( ajaxurl, data, function(response) {
+                    // alert('Получено с сервера: ' + response);
+                });
+                // Delete the row
+                let row_id = '#row_' + category_id;
+                let row = $(row_id);
+                row = row[0];
+                row.remove();
+            });
         </script>

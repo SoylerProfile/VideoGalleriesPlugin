@@ -15,8 +15,12 @@ use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
 
 $all_categories = Videosurfpro_Category::get_all_categories();
+$domain = get_site_url();
 
-if(isset($_POST['video_link'])) {
+/*
+ * ADD NEW VIDEO
+*/
+if(isset($_POST['add_video'])) {
     $video_name = $_POST['video_name'];
     $video_slug = 'SLUG';
     $video_description = $_POST['video_description'];
@@ -61,6 +65,8 @@ if(isset($_POST['video_link'])) {
 
                 <!--        HIDDEN DATA        -->
                 <input type="hidden" name="video_provider" value="YouTube">
+                <input type="hidden" name="add_video" value="add_video" id="add_video">
+                <input type="hidden" name="current_user_id" value="<?=get_current_user_id()?>">
 
                 <div class="p-3">
                     <div class="form-group">
