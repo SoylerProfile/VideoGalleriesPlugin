@@ -42,6 +42,8 @@ class Videosurfpro_Video
         if($this->validate()) {
             //нужно отрефакторить, создать класс валидатор
             $this->validate_all_data();
+            if($this->check_if_video_exists($this->video_link))
+                return 'This video already exists in the database!';
 //            $this->print_all_data();
 //            die();
 
@@ -69,9 +71,9 @@ class Videosurfpro_Video
                 array('%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')
             );
             if($result)
-                return true;
+                return 'Video was successfully added';
             else
-                return false;
+                return 'Check the specified data';
         }
         else {
             // code if data is not ok
@@ -144,6 +146,10 @@ class Videosurfpro_Video
         $this->video_seo_title = $this->remove_emoji($this->video_seo_title);
         $this->video_seo_description = $this->remove_emoji($this->video_seo_description);
         $this->video_seo_keywords = $this->remove_emoji($this->video_seo_keywords);
+
+//        $result = $this->check_if_video_exists($this->video_link);
+//
+//        return $result;
     }
 
     private function remove_emoji($string) {
@@ -225,5 +231,14 @@ class Videosurfpro_Video
         $table = $wpdb->prefix . VIDEOS_TABLE;
         $sql = "UPDATE $table SET video_views = video_views + 1 WHERE id = $video_id";
         $wpdb->query($sql);
+    }
+
+    private function check_if_video_exists() {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $video_id = $this->video_id;
+        $sql = "SELECT * FROM $table WHERE `video_id` = '" . $video_id . "'";
+        $result = $wpdb->get_row($sql);
+        return $result;
     }
 }

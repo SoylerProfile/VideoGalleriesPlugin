@@ -65,8 +65,8 @@ $all_videos = Videosurfpro_Video::get_all_videos();
                             <td><?= $all_videos[$i]->video_name ?></td>
                             <td><?= $all_videos[$i]->video_provider ?></td>
                             <td>
-                                <?php echo ($all_videos[$i]->video_is_published == 1) ? "<a class='video_status published' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=0&video_id=" . $all_videos[$i]->id . "'><span>Published</span></a>" : "<a class='video_status draft' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=1&video_id=" . $all_videos[$i]->id . "'><span>Draft</span></a>" ?>
-                                <form action="" id="change_video_status_form">
+                                <form action="" id="change_video_status_form_<?=$all_videos[$i]->id?>">
+                                    <?php echo ($all_videos[$i]->video_is_published == 1) ? "<a class='video_status published' href=''><span>Published</span></a>" : "<a class='video_status draft' href=''><span>Draft</span></a>" ?>
                                     <input type="hidden" name="video_id" value="<?=$all_videos[$i]->id?>">
                                     <input type="hidden" name="new_value" value="<?php echo ($all_videos[$i]->video_is_published) ? '0' : '1' ?>">
                                 </form>
@@ -152,60 +152,74 @@ $(".col-md-6").removeClass("d-flex align-items-center");
 </script>
 
 <script type="text/javascript">
+
     /**
      * Delete Video
      */
-    $('form#delete_video_form').on('submit', function(e) {
-        e.preventDefault();
-        form = $(this)[0];
-        var video_id = form.elements.video_id.value;
-        var data = {
-            action: 'videosurfpro_delete_video',
-            video_id: video_id,
-        };
-        // с версии 2.8 'ajaxurl' всегда определен в админке
-        jQuery.post( ajaxurl, data, function(response) {
-            // alert('Получено с сервера: ' + response);
+    function ajax_delete_video() {
+        $('form#delete_video_form').on('submit', function(e) {
+            e.preventDefault();
+            form = $(this)[0];
+            var video_id = form.elements.video_id.value;
+            var data = {
+                action: 'videosurfpro_delete_video',
+                video_id: video_id,
+            };
+            // с версии 2.8 'ajaxurl' всегда определен в админке
+            jQuery.post( ajaxurl, data, function(response) {
+                // alert('Получено с сервера: ' + response);
+            });
+            // Delete the row
+            let row_id = '#row_' + video_id;
+            let row = $(row_id);
+            row = row[0];
+            row.remove();
         });
-        // Delete the row
-        let row_id = '#row_' + video_id;
-        let row = $(row_id);
-        row = row[0];
-        row.remove();
-    });
+    }
 
     /**
      * Change Video Status
      */
-    let video_status_el = $('a.video_status');
-    video_status_el.click(function (e) {
-        e.preventDefault();
-        let video_status_obj = $(this);
+    function ajax_change_status() {
+        let video_status_el = $('a.video_status');
+        video_status_el.click(function (e) {
+            e.preventDefault();
+            let video_status_obj = $(this);
 
-        // Visual Status Change
-        if(video_status_obj.hasClass('draft')) {
-            video_status_obj.removeClass('draft');
-            video_status_obj.addClass('published');
-            video_status_obj.html('<span>Published</span>');
-        }
-        else if(video_status_obj.hasClass('published')) {
-            video_status_obj.removeClass('published');
-            video_status_obj.addClass('draft');
-            video_status_obj.html('<span>Draft</span>');
-        }
+            // Visual Status Change
+            if(video_status_obj.hasClass('draft')) {
+                video_status_obj.removeClass('draft');
+                video_status_obj.addClass('published');
+                video_status_obj.html('<span>Published</span>');
+            }
+            else if(video_status_obj.hasClass('published')) {
+                video_status_obj.removeClass('published');
+                video_status_obj.addClass('draft');
+                video_status_obj.html('<span>Draft</span>');
+            }
 
-        // Send The request to the server
-        let form = $('form#change_video_status_form')[0];
-        let video_id = form.elements.video_id.value;
-        let new_value = form.elements.new_value.value;
-        let data = {
-            action: 'videosurfpro_change_video_status',
-            video_id: video_id,
-            new_value: new_value
-        };
-        jQuery.post(ajaxurl, data, function(result) {
-            console.log(result);
+            // Send The request to the server
+            let form = $(this).parent()[0];
+            let video_id = form.elements.video_id.value;
+            let new_value = form.elements.new_value.value;
+            let data = {
+                action: 'videosurfpro_change_video_status',
+                video_id: video_id,
+                new_value: new_value
+            };
+            jQuery.post(ajaxurl, data, function(result) {
+                console.log(result);
+            });
         });
+    }
+    // Get new elements for Ajax functions
+    let paginate_buttons = $('li.paginate_button');
+    paginate_buttons.click(function (){
+        ajax_change_status();
+        ajax_delete_video()
     });
+    // Start JS code
+    ajax_change_status();
+    ajax_delete_video()
 
 </script>
