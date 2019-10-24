@@ -15,17 +15,23 @@ class DataGetter
     public function get_video_data($video_link) {
         $video_id = $this->get_video_id($video_link);
         $json_output = file_get_contents($this->pattern .= $video_id);
-        $json_video_data_array = json_decode($json_output, true);
+        $video_data_array = json_decode($json_output, true);
 //        echo "<pre>";
 //        print_r($json_video_data_array);
 //        die();
-        return $json_video_data_array;
+        return $video_data_array;
     }
 
     private function get_video_id($video_link) {
         parse_str(parse_url($video_link, PHP_URL_QUERY), $arguments);
         $video_id = $arguments['v'];
         return $video_id;
+    }
+
+    public function get_json_video_data($video_link) {
+        $video_id = $this->get_video_id($video_link);
+        $json_video_data = file_get_contents($this->pattern .= $video_id);
+        return $json_video_data;
     }
 
 }

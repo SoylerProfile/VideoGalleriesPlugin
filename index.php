@@ -39,6 +39,9 @@ add_action('admin_menu', 'videosurfpro_admin_menu');
 
 // Ajax функции плагина
 add_action('wp_ajax_videosurfpro_delete_video', 'videosurfpro_delete_video');
+add_action('wp_ajax_videosurfpro_change_video_status', 'videosurfpro_change_video_status');
+add_action('wp_ajax_videosurfpro_get_video_data_by_link', 'videosurfpro_get_video_data_by_link');
+
 add_action('wp_ajax_videosurfpro_delete_category', 'videosurfpro_delete_category');
 
 

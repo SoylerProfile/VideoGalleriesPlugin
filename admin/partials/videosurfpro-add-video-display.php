@@ -44,6 +44,13 @@ if(isset($_POST['add_video'])) {
 
 ?>
 
+<script
+        src="https://code.jquery.com/jquery-3.4.1.js"
+        integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+        crossorigin="anonymous">
+</script>
+
+
 <link rel="stylesheet" type="text/css" href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
 
 <div class="container">
@@ -83,7 +90,7 @@ if(isset($_POST['add_video'])) {
                     </div>
                     <div class="form-group">
                         <label for="inputCity">Description</label>
-                        <textarea rows="6" class="form-control" id="inputCity" name="video_description"></textarea>
+                        <textarea rows="6" class="form-control" id="video_description_textarea" name="video_description"></textarea>
                     </div>
                     <div class="form-group">
                         <h3>SEO</h3>
@@ -106,12 +113,7 @@ if(isset($_POST['add_video'])) {
             <section>
 
                 <div class="p-3">
-                    <div class="form-group">
-                        <h4>Название видео</h4>
-
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/hrcxV8l2QtU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-                        <p>Описание видео</p>
+                    <div class="form-group" id="view_section_content">
                     </div>
                 </div>
 
@@ -120,7 +122,7 @@ if(isset($_POST['add_video'])) {
     </form>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="/wp-content/plugins/videosurfpro/admin/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
 
@@ -169,5 +171,37 @@ if(isset($_POST['add_video'])) {
 <script type="text/javascript">
     $('a[href="#finish"]').click(function() {
         $("#add_new_video").submit();
+    });
+</script>
+
+<script>
+    let next_button = $("#wizard1 > div.actions.clearfix > ul > li:nth-child(2) > a");
+    next_button.click(function (e) {
+        e.preventDefault();
+        let link_page = $('#wizard1-t-0').parent()[0];
+        link_page = $(link_page);
+        let description_page = $('#wizard1-t-1').parent()[0];
+        description_page = $(description_page);
+        if (link_page.hasClass('done') && description_page.hasClass('current') ) {
+            // Тут код Ajax обработка запроса получения данных
+            let form = $('form#add_new_video')[0];
+            let video_link = form.elements.video_link.value;
+            let data = {
+                action: 'videosurfpro_get_video_data_by_link',
+                video_link: video_link
+            };
+            jQuery.post(ajaxurl, data, function(json_video_data) {
+                let video_data_object = JSON.parse(json_video_data);
+                let video_name = video_data_object.items[0].snippet.title;
+                let video_description = video_data_object.items[0].snippet.description;
+                let video_youtube_id = video_data_object.items[0].id;
+                $('input[name="video_name"]').val(video_name);
+                $('#video_description_textarea').html(video_description);
+                let video_name_html = '<h4 id="view_video_name">' + video_name + '</h4>';
+                let video_iframe_html = '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + video_youtube_id + '" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+                $('#view_section_content').append(video_name_html).append(video_iframe_html);
+            })
+        }
+        console.log('ok');
     });
 </script>

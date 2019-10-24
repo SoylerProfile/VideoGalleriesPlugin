@@ -18,14 +18,21 @@ $domain = get_site_url();
 
 $all_videos = Videosurfpro_Video::get_all_videos();
 
-// Смена статуса видео
-if (isset($_GET['change_video_status'])) {
-    $video_id = $_GET['video_id'];
-    $new_status = $_GET['new_value'];
-    Videosurfpro_Video::change_video_status($video_id, $new_status);
-}
-
 ?>
+
+<style>
+    a {
+        text-decoration: none;
+    }
+    a.published {
+        color:green;
+        cursor:pointer;
+    }
+    a.draft {
+        color:red;
+        cursor:pointer;
+    }
+</style>
 
 <script
         src="https://code.jquery.com/jquery-3.4.1.js"
@@ -58,12 +65,15 @@ if (isset($_GET['change_video_status'])) {
                             <td><?= $all_videos[$i]->video_name ?></td>
                             <td><?= $all_videos[$i]->video_provider ?></td>
                             <td>
-                                <?php echo ($all_videos[$i]->video_is_published == 1) ? "<a style='color:green; cursor:pointer; text-decoration: none;' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=0&video_id=" . $all_videos[$i]->id . "'>Published</a>" : "<a style='color:red; cursor:pointer; text-decoration: none;' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=1&video_id=" . $all_videos[$i]->id . "'>Draft</a>" ?>
+                                <?php echo ($all_videos[$i]->video_is_published == 1) ? "<a class='video_status published' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=0&video_id=" . $all_videos[$i]->id . "'><span>Published</span></a>" : "<a class='video_status draft' href='?page=videosurfpro_submenu_all_videos&change_video_status=true&new_value=1&video_id=" . $all_videos[$i]->id . "'><span>Draft</span></a>" ?>
+                                <form action="" id="change_video_status_form">
+                                    <input type="hidden" name="video_id" value="<?=$all_videos[$i]->id?>">
+                                    <input type="hidden" name="new_value" value="<?php echo ($all_videos[$i]->video_is_published) ? '0' : '1' ?>">
+                                </form>
                             </td>
                             <td>
                                 <form action="?page=videosurfpro_submenu_edit_video&video_id=<?= $all_videos[$i]->id ?>" method="POST" id="edit_video_form">
-                                    <input type="hidden" name="edit_video_by_id"
-                                           value="<?= $all_videos[$i]->id ?>">
+                                    <input type="hidden" name="edit_video_by_id" value="<?= $all_videos[$i]->id ?>">
                                     <button type="submit" name="edit_video_by_id" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit">
                                       <i class="fas fa-edit"></i>
                                     </button>
@@ -163,4 +173,39 @@ $(".col-md-6").removeClass("d-flex align-items-center");
         row = row[0];
         row.remove();
     });
+
+    /**
+     * Change Video Status
+     */
+    let video_status_el = $('a.video_status');
+    video_status_el.click(function (e) {
+        e.preventDefault();
+        let video_status_obj = $(this);
+
+        // Visual Status Change
+        if(video_status_obj.hasClass('draft')) {
+            video_status_obj.removeClass('draft');
+            video_status_obj.addClass('published');
+            video_status_obj.html('<span>Published</span>');
+        }
+        else if(video_status_obj.hasClass('published')) {
+            video_status_obj.removeClass('published');
+            video_status_obj.addClass('draft');
+            video_status_obj.html('<span>Draft</span>');
+        }
+
+        // Send The request to the server
+        let form = $('form#change_video_status_form')[0];
+        let video_id = form.elements.video_id.value;
+        let new_value = form.elements.new_value.value;
+        let data = {
+            action: 'videosurfpro_change_video_status',
+            video_id: video_id,
+            new_value: new_value
+        };
+        jQuery.post(ajaxurl, data, function(result) {
+            console.log(result);
+        });
+    });
+
 </script>
