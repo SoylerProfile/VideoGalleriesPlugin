@@ -15,6 +15,8 @@ require __DIR__ . '/libraries/YouTubeAPI/class-video-data-getter.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-video.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-category.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-provider.php';
+require __DIR__ . '/admin/classes/class-videosurfpro-advertisement.php';
+require __DIR__ . '/admin/classes/class-videosurfpro-template.php';
 require __DIR__ . '/includes/class-videosurfpro-shortcode.php';
 require __DIR__ . '/includes/class-videosurfpro-widget.php';
 
@@ -155,4 +157,4 @@ add_filter('init', function ($template) {
 });
 
 // WIDGETS
-add_action('widgets_init', 'videosurfpro_widget_last_videos');
+add_action('widgets_init', 'videosurfpro_register_widgets');

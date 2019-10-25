@@ -27,9 +27,9 @@ class Videosurfpro_Provider
                 array('provider_name' => $provider_name)
             );
             if ($result) {
-                return 'API KEY Was successfully updated';
+                return 'updated';
             } else {
-                return 'Can not update your API key';
+                return 'cannot_update';
             }
         } else {
             // SET
@@ -37,9 +37,9 @@ class Videosurfpro_Provider
             $table = $wpdb->prefix . PROVIDERS_TABLE;
             $result = $wpdb->insert($table, array('provider_name' => $provider_name, 'provider_api_key' => $provider_api_key));
             if($result) {
-                return 'API Key was successfully saved';
+                return 'created';
             } else {
-                return 'Can not save your API KEY';
+                return 'cannot_insert';
             }
         }
     }

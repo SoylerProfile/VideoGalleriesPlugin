@@ -13,6 +13,7 @@
 
 use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
+use admin\classes\Videosurfpro_Template;
 
 $all_categories = Videosurfpro_Category::get_all_categories();
 $domain = get_site_url();
@@ -36,7 +37,10 @@ if(isset($_POST['add_video'])) {
     $video = new Videosurfpro_Video($video_name, $video_slug, $video_description, $video_link, $video_provider, $video_category_id, $video_author_id, $video_created_at, $video_seo_title, $video_seo_description, $video_seo_keywords);
     $result = $video->add_video();
 
-    echo $result;
+    if($result)
+        echo Videosurfpro_Template::success_alert('Video was successfully added');
+    else
+        echo Videosurfpro_Template::warning_alert('Check the specified data');
 }
 
 ?>

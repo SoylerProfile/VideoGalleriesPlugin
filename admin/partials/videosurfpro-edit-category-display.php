@@ -1,6 +1,7 @@
 <?php
 
 use admin\classes\Videosurfpro_Category;
+use admin\classes\Videosurfpro_Template;
 
 // GET Category ID from page All Categories and then, work with it
 $category_id = $_GET['category_id'];
@@ -21,12 +22,10 @@ if(isset($_POST['save_edited_category'])) {
     $category_seo_description = $_POST['category_seo_description'];
     $category_seo_keywords = $_POST['category_seo_keywords'];
     $result = Videosurfpro_Category::update_category_data($id, $category_name, $category_slug, $category_description, $category_seo_title, $category_seo_description, $category_seo_keywords);
-    if($result) {
-        echo "Changes were successfully saved!";
-    }
-    else {
-        echo "Can't save your changes <br>";
-    }
+    if($result)
+        echo Videosurfpro_Template::success_alert('Changes were successfully saved!');
+    else
+        echo Videosurfpro_Template::warning_alert('Can not save your changes');
 }
 
 ?>

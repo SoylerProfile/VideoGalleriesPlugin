@@ -2,6 +2,7 @@
 
 use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
+use admin\classes\Videosurfpro_Template;
 
 $all_categories = Videosurfpro_Category::get_all_categories();
 
@@ -25,15 +26,10 @@ if(isset($_POST['save_edited_video'])) {
     $video_seo_description = $_POST['video_seo_description'];
     $video_seo_keywords = $_POST['video_seo_keywords'];
     $result = Videosurfpro_Video::update_video_data($id, $video_name, $video_slug, $video_description, $video_category_id, $video_seo_title, $video_seo_description, $video_seo_keywords);
-    if($result) {
-        echo "Changes were successfully saved!";
-    }
-    else {
-        echo "Can't save your changes <br>";
-        echo "<pre>";
-        var_dump($result);
-        echo "</pre>";
-    }
+    if($result)
+        echo Videosurfpro_Template::success_alert('Changes were successfully saved!');
+    else
+        echo Videosurfpro_Template::warning_alert('Can not save your changes');
 }
 
 ?>

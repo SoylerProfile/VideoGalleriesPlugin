@@ -12,6 +12,7 @@
  */
 
 use admin\classes\Videosurfpro_Category;
+use admin\classes\Videosurfpro_Template;
 
 if(isset($_POST['submit'])) {
     $category_name = $_POST['category_name'];
@@ -26,10 +27,12 @@ if(isset($_POST['submit'])) {
     $result = $category->add_category();
 
     if($result)
-        echo 'Category was successfully added';
+        echo Videosurfpro_Template::success_alert('Category was successfully added');
     else
-        echo 'Check the specified data';
+        echo Videosurfpro_Template::warning_alert('Check the specified data');
 }
+
+
 
 ?>
 

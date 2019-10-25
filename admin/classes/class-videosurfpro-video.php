@@ -71,9 +71,9 @@ class Videosurfpro_Video
                 array('%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s', '%s')
             );
             if($result)
-                return 'Video was successfully added';
+                return true;
             else
-                return 'Check the specified data';
+                return false;
         }
         else {
             // code if data is not ok

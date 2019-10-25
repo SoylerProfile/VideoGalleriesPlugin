@@ -14,7 +14,7 @@ class Videosurfpro_Admin {
 //        add_submenu_page( 'videosurfpro_admin_menu', 'Galleries', 'Galleries', 'manage_options', 'videosurfpro_submenu_all_galleries', 'videosurfpro_display_submenu_all_galleries' );
         add_submenu_page( 'videosurfpro_admin_menu', 'Add Video', 'Add Video', 'manage_options', 'videosurfpro_submenu_add_video', 'videosurfpro_display_submenu_add_video' );
         add_submenu_page( 'videosurfpro_admin_menu', 'Add Category', 'Add Category', 'manage_options', 'videosurfpro_submenu_add_category', 'videosurfpro_display_submenu_add_category' );
-//        add_submenu_page( 'videosurfpro_admin_menu', 'Advertisement', 'Advertisement', 'manage_options', 'videosurfpro_submenu_advertisement', 'videosurfpro_display_submenu_advertisement' );
+        add_submenu_page( 'videosurfpro_admin_menu', 'Advertisement', 'Advertisement', 'manage_options', 'videosurfpro_submenu_advertisement', 'videosurfpro_display_submenu_advertisement' );
         add_submenu_page( 'videosurfpro_admin_menu', 'All Providers', 'All Providers', 'manage_options', 'videosurfpro_submenu_providers', 'videosurfpro_display_submenu_providers' );
         add_submenu_page( 'videosurfpro_admin_menu', 'FAQ', 'FAQ', 'manage_options', 'videosurfpro_submenu_faq', 'videosurfpro_display_submenu_faq' );
 
@@ -79,13 +79,13 @@ class Videosurfpro_Admin {
         include_once( 'partials/videosurfpro-add-category-display.php' );
     }
 
-//    public static function videosurfpro_display_submenu_advertisement() {
-//        // make some logic
-//        // ...
-//
-//        // show the view
-//        include_once( 'partials/videosurfpro-advertisement-display.php' );
-//    }
+    public static function videosurfpro_display_submenu_advertisement() {
+        // make some logic
+        // ...
+
+        // show the view
+        include_once( 'partials/videosurfpro-advertisement-display.php' );
+    }
 
     public static function videosurfpro_display_submenu_providers() {
         // make some logic

@@ -1,6 +1,6 @@
 <?php
 
-namespace includes;
+namespace includes\Videosurfpro_Widgeta;
 
 require_once ABSPATH . 'wp-includes/class-wp-widget.php';
 
