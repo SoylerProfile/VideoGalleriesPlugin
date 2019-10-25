@@ -8,6 +8,7 @@ Author: Fuze
 Author URI: http://fuze.com
 */
 
+// OUR
 require __DIR__ . '/config.php';
 require __DIR__ . '/functions.php';
 require __DIR__ . '/libraries/YouTubeAPI/class-video-data-getter.php';
@@ -15,9 +16,15 @@ require __DIR__ . '/admin/classes/class-videosurfpro-video.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-category.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-provider.php';
 require __DIR__ . '/includes/class-videosurfpro-shortcode.php';
+require __DIR__ . '/includes/class-videosurfpro-widget.php';
+
+// CORE
+//require_once ABSPATH . 'wp-includes/class-wp-widget.php';
 
 use includes\Videosurfpro_Shortcode;
 use admin\classes\Videosurfpro_Video;
+
+//use WP_Widget;
 
 
 // Хук. Активация нашего плагина
@@ -146,3 +153,6 @@ add_filter('init', function ($template) {
         die();
     }
 });
+
+// WIDGETS
+add_action('widgets_init', 'videosurfpro_widget_last_videos');

@@ -23,6 +23,7 @@ class Videosurfpro_Admin {
         */
         add_submenu_page( null, 'Edit Video', null, 'manage_options', 'videosurfpro_submenu_edit_video', 'videosurfpro_display_submenu_edit_video' );
         add_submenu_page( null, 'Edit Category', null, 'manage_options', 'videosurfpro_submenu_edit_category', 'videosurfpro_display_submenu_edit_category' );
+        add_submenu_page( null, 'YouTube Settings', null, 'manage_options', 'videosurfpro_submenu_youtube_settings', 'videosurfpro_display_submenu_youtube_settings' );
 
         /**
          * ROUTES
@@ -119,6 +120,13 @@ class Videosurfpro_Admin {
 
         // show the view
         include_once( 'partials/videosurfpro-edit-category-display.php' );
+    }
+    public static function videosurfpro_display_submenu_youtube_settings() {
+        // make some logic
+        // ...
+
+        // show the view
+        include_once( 'partials/videosurfpro-youtube-settings-display.php' );
     }
 
     /**
