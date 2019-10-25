@@ -13,6 +13,7 @@ require __DIR__ . '/functions.php';
 require __DIR__ . '/libraries/YouTubeAPI/class-video-data-getter.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-video.php';
 require __DIR__ . '/admin/classes/class-videosurfpro-category.php';
+require __DIR__ . '/admin/classes/class-videosurfpro-provider.php';
 require __DIR__ . '/includes/class-videosurfpro-shortcode.php';
 
 use includes\Videosurfpro_Shortcode;

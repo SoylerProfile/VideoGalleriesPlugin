@@ -89,6 +89,20 @@ class Videosurfpro_Activator {
 //            ));
 //        }
 
+        $table_name = $wpdb->prefix . PROVIDERS_TABLE;
+
+        if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
+            $sql = "CREATE TABLE $table_name (
+              id int(11) UNSIGNED AUTO_INCREMENT,
+              provider_name varchar(355),
+              provider_api_key varchar(355),
+              UNIQUE KEY id (id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
+
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+        }
+
         // create next table below
         // ...
     }
