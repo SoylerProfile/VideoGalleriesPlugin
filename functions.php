@@ -76,6 +76,11 @@ function videosurfpro_display_submenu_providers()
     Videosurfpro_Admin::videosurfpro_display_submenu_providers();
 }
 
+function videosurfpro_display_submenu_faq()
+{
+    Videosurfpro_Admin::videosurfpro_display_submenu_faq();
+}
+
 /**
  * Hidden menus
  */

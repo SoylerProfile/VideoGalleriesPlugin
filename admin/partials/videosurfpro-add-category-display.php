@@ -35,17 +35,6 @@ if(isset($_POST['submit'])) {
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 
-<!--<h1>ADD a new category</h1>-->
-<!---->
-<!--<form action="" method="post">-->
-<!--    <div>Category Name: <input type="text" name="category_name" required></div>-->
-<!--    <div>Category Description: <input type="text" name="category_description" required></div>-->
-<!--    <div>Category SEO TITLE: <input type="text" name="category_seo_title" value="1" required></div>-->
-<!--    <div>Category SEO DESCRIPTION: <input type="text" name="category_seo_description" value="1" required></div>-->
-<!--    <div>Category SEO KEYWORDS: <input type="text" name="category_seo_keywords" value="1" required></div>-->
-<!--    <div><input name='submit' type="submit" class="button" value="Добавить"></div>-->
-<!--</form>-->
-
 <link rel="stylesheet" type="text/css" href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
 
 <div class="container">
