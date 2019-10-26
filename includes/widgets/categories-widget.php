@@ -7,11 +7,11 @@ $all_categories = Videosurfpro_Category::get_all_categories();
 ?>
 
 <!--Bootstrap and Other Vendors-->
-<!--<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/bootstrap.css">-->
+<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/bootstrap.css">
 
 <!--Theme Styles-->
-<!--<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/style.css">-->
-<!--<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/responsive.css">-->
+<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/style.css">
+<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/responsive.css">
 
 <section class="row recent_uploads">
     <div class="container">

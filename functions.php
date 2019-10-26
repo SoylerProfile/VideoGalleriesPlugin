@@ -222,7 +222,7 @@ class Videosurfpro_Popular_Videos_Widget extends WP_Widget
 
     public function widget($args, $instance)
     {
-        echo "HERE ARE Popular VIDEOS <br>";
+        include_once( 'includes/widgets/popular-videos-widget.php' );
     }
 
     public function form($instance)
