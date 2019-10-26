@@ -109,4 +109,5 @@ class Videosurfpro_Category
         $result = $wpdb->delete($table, array('id' => $category_id));
         return $result;
     }
+
 }

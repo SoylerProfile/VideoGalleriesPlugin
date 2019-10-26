@@ -81,52 +81,53 @@ add_shortcode($shortcode, function ($request) {
         return '';
     } else {
         // GET DATA
-        if (isset($_POST['videos_sortby_views'])) {
-            $all_orderby_views_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc();
-            $videos = $all_orderby_views_videos;
-
-        } else if (isset($_POST['videos_sortby_latest'])) {
-            $all_orderby_latest_videos = Videosurfpro_Video::get_all_videos_orderby_latest_desc();
-            $videos = $all_orderby_latest_videos;
-        }
-        else {
-            $all_videos = Videosurfpro_Video::get_all_videos();
-            $videos = $all_videos;
-        }
-        $html = "";
-        $content = "";
-        $domain = get_site_url();
-        $videos_sort_div = "
-        <div style='display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px; max-width: 100vw;'>
-            <form action='' method='POST'>
-                <input type='submit' name='videos_sortby_views' value='Sort by Views'>
-            </form>
-            <form action='' method='POST'>
-                <input type='submit' name='videos_sortby_latest' value='Latest Videos'>
-            </form>
-        </div>
-    ";
-        $content .= $videos_sort_div;
-
-        $latest_videos = "<div style='margin:0; display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px;'>";
-        // INSERT DATA
-        foreach ($videos as $video) {
-            if ($video->video_is_published == true) {
-//                if (Videosurfpro_Video::is_exists_youtube_video_thumbnail($video->video_id) == true) {
-                    $latest_videos .= '
-                        <a href="' . $domain . '/?videosurfpro_video_id=' . $video->id . '">
-                            <img src="http://img.youtube.com/vi/' . $video->video_id . '/mqdefault.jpg" />
-                        </a>
-                    ';
-//                }
-            }
-        }
-        $latest_videos .= '</div';
-
-        // RETURN DATA
-        $content .= $latest_videos;
-        $html .= $content;
-        return $html;
+        include_once( 'public/partials/videosurfpro-all-videos-display.php' );
+//        if (isset($_POST['videos_sortby_views'])) {
+//            $all_orderby_views_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc();
+//            $videos = $all_orderby_views_videos;
+//
+//        } else if (isset($_POST['videos_sortby_latest'])) {
+//            $all_orderby_latest_videos = Videosurfpro_Video::get_all_videos_orderby_latest_desc();
+//            $videos = $all_orderby_latest_videos;
+//        }
+//        else {
+//            $all_videos = Videosurfpro_Video::get_all_videos();
+//            $videos = $all_videos;
+//        }
+//        $html = "";
+//        $content = "";
+//        $domain = get_site_url();
+//        $videos_sort_div = "
+//        <div style='display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px; max-width: 100vw;'>
+//            <form action='' method='POST'>
+//                <input type='submit' name='videos_sortby_views' value='Sort by Views'>
+//            </form>
+//            <form action='' method='POST'>
+//                <input type='submit' name='videos_sortby_latest' value='Latest Videos'>
+//            </form>
+//        </div>
+//    ";
+//        $content .= $videos_sort_div;
+//
+//        $latest_videos = "<div style='margin:0; display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px;'>";
+//        // INSERT DATA
+//        foreach ($videos as $video) {
+//            if ($video->video_is_published == true) {
+////                if (Videosurfpro_Video::is_exists_youtube_video_thumbnail($video->video_id) == true) {
+//                    $latest_videos .= '
+//                        <a href="' . $domain . '/?videosurfpro_video_id=' . $video->id . '">
+//                            <img src="http://img.youtube.com/vi/' . $video->video_id . '/mqdefault.jpg" />
+//                        </a>
+//                    ';
+////                }
+//            }
+//        }
+//        $latest_videos .= '</div';
+//
+//        // RETURN DATA
+//        $content .= $latest_videos;
+//        $html .= $content;
+//        return $html;
     }
 });
 
@@ -157,4 +158,4 @@ add_filter('init', function ($template) {
 });
 
 // WIDGETS
-//add_action('widgets_init', 'videosurfpro_register_widgets');
+add_action('widgets_init', 'videosurfpro_register_widgets');

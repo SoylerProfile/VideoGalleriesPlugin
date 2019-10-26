@@ -149,6 +149,7 @@ function videosurfpro_get_video_data_by_link()
     $video_link = $_POST['video_link'];
     $data_getter = new DataGetter();
     $video_json_data = $data_getter->get_json_video_data($video_link);
+    die($video_json_data);
     echo $video_json_data;
     wp_die();
 }
@@ -179,7 +180,7 @@ class Videosurfpro_Last_Videos_Widget extends WP_Widget
 
     public function widget($args, $instance)
     {
-        echo "HERE ARE LAST VIDEOS <br>";
+        include_once( 'includes/widgets/last-videos-widget.php' );
     }
 
     public function form($instance)
