@@ -44,8 +44,9 @@ $all_videos = Videosurfpro_Video::get_all_videos();
       href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
 <br/>
 <div class="container">
+    <div id="alert_data"></div>
   <h1>Videos</h1>
-            <table id="example" class="table table-hover" data-toggle="datatable">
+            <table id="Video_Table" class="table table-hover" data-toggle="datatable">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -72,7 +73,9 @@ $all_videos = Videosurfpro_Video::get_all_videos();
                                 </form>
                             </td>
                             <td>
-                                <form action="?page=videosurfpro_submenu_edit_video&video_id=<?= $all_videos[$i]->id ?>" method="POST" id="edit_video_form">
+                                <form action="" method="GET" id="edit_video_form">
+                                    <input type="hidden" name="page" value="videosurfpro_admin_menu">
+                                    <input type="hidden" name="video_id" value="<?= $all_videos[$i]->id ?>">
                                     <input type="hidden" name="edit_video_by_id" value="<?= $all_videos[$i]->id ?>">
                                     <button type="submit" name="edit_video_by_id" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit">
                                       <i class="fas fa-edit"></i>
@@ -163,13 +166,16 @@ $(".col-md-6").removeClass("d-flex align-items-center");
             };
             // с версии 2.8 'ajaxurl' всегда определен в админке
             jQuery.post( ajaxurl, data, function(response) {
-                // alert('Получено с сервера: ' + response);
+                $('div#alert_data').html(response);
             });
             // Delete the row
+            var table = $('#Video_Table').DataTable();
+
             let row_id = '#row_' + video_id;
             let row = $(row_id);
             row = row[0];
-            row.remove();
+            
+            table.row(row_id).remove().draw( false );
         });
     }
 

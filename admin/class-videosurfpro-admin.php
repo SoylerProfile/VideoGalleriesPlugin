@@ -9,7 +9,7 @@ class Videosurfpro_Admin {
 
     public static function add_plugin_admin_menu() {
         add_menu_page( 'VideoSurfPro', 'VideoSurfPro', 'manage_options', 'videosurfpro_admin_menu', 'videosurfpro_display_admin_menu_main', '', 4 );
-        add_submenu_page( 'videosurfpro_admin_menu', 'Videos', 'Videos', 'manage_options', 'videosurfpro_admin_menu', 'videosurfpro_display_submenu_all_videos' );
+        add_submenu_page( 'videosurfpro_admin_menu', 'Videos', 'Videos', 'manage_options', 'videosurfpro_admin_menu', 'videosurfpro_display_admin_menu_main' );
         add_submenu_page( 'videosurfpro_admin_menu', 'Categories', 'Categories', 'manage_options', 'videosurfpro_submenu_all_categories', 'videosurfpro_display_submenu_all_categories' );
 //        add_submenu_page( 'videosurfpro_admin_menu', 'Galleries', 'Galleries', 'manage_options', 'videosurfpro_submenu_all_galleries', 'videosurfpro_display_submenu_all_galleries' );
         add_submenu_page( 'videosurfpro_admin_menu', 'Add Video', 'Add Video', 'manage_options', 'videosurfpro_submenu_add_video', 'videosurfpro_display_submenu_add_video' );
@@ -34,9 +34,13 @@ class Videosurfpro_Admin {
     public static function videosurfpro_display_admin_menu_main() {
         // make some logic
         // ...
-
-        // show the view
-        include_once( 'partials/videosurfpro-all-videos-display.php' );
+        if (isset($_GET['edit_video_by_id'])) {
+            // Edit Video
+            include_once('partials/videosurfpro-edit-video-display.php');
+        } else {
+            // All Videos
+            include_once( 'partials/videosurfpro-all-videos-display.php' );
+        }
     }
 
     public static function videosurfpro_display_submenu_all_videos() {
@@ -50,9 +54,13 @@ class Videosurfpro_Admin {
     public static function videosurfpro_display_submenu_all_categories() {
         // make some logic
         // ...
-
-        // show the view
-        include_once( 'partials/videosurfpro-all-categories-display.php' );
+        if (isset($_GET['edit_category_by_id'])) {
+            // Edit Category
+            include_once('partials/videosurfpro-edit-category-display.php');
+        } else {
+            // All Categories
+            include_once('partials/videosurfpro-all-categories-display.php');
+        }
     }
 
 //    public static function videosurfpro_display_submenu_all_galleries() {

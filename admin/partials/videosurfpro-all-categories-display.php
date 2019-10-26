@@ -28,9 +28,10 @@ $all_categories = Videosurfpro_Category::get_all_categories();
       href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
 <br/>
     <div class="container">
+        <div id="alert_data"></div>
       <h1>Categories</h1>
 
-            <table id="categories" class="table table-hover" data-toggle="datatable">
+            <table id="Categories_Table" class="table table-hover" data-toggle="datatable">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -46,10 +47,10 @@ $all_categories = Videosurfpro_Category::get_all_categories();
                             <td><?= $all_categories[$i]->id ?></td>
                             <td><?= $all_categories[$i]->category_name ?></td>
                             <td class="text-center">
-                                <form action="?page=videosurfpro_submenu_edit_category&category_id=<?= $all_categories[$i]->id ?>"
-                                      method="POST">
-                                    <input type="hidden" name="edit_category_by_id"
-                                           value="<?= $all_categories[$i]->id ?>">
+                                <form action="" method="GET">
+                                    <input type="hidden" name="page" value="videosurfpro_submenu_all_categories">
+                                    <input type="hidden" name="category_id" value="<?= $all_categories[$i]->id ?>">
+                                    <input type="hidden" name="edit_category_by_id" value="<?= $all_categories[$i]->id ?>">
                                     <button type="submit" name="edit_category_by_id" class="btn btn-outline-info btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit category">
                                         <i class="fas fa-edit"></i>
                                     </button>
@@ -129,13 +130,17 @@ $all_categories = Videosurfpro_Category::get_all_categories();
                     };
                     // с версии 2.8 'ajaxurl' всегда определен в админке
                     jQuery.post( ajaxurl, data, function(response) {
-                        // alert('Получено с сервера: ' + response);
+                        $('div#alert_data').html(response);
                     });
                     // Delete the row
+                    var table = $('#Categories_Table').DataTable();
+
                     let row_id = '#row_' + category_id;
                     let row = $(row_id);
                     row = row[0];
                     row.remove();
+                    
+                    table.row(row_id).remove().draw( false );
                 });
             }
             // Get new elements for Ajax functions

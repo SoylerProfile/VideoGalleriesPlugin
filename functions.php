@@ -15,6 +15,8 @@ use admin\Videosurfpro_Admin;
 use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
 use libraries\YouTubeAPI\DataGetter;
+use admin\classes\Videosurfpro_Template;
+
 
 // ************************************************************ //
 
@@ -114,9 +116,9 @@ function videosurfpro_delete_video()
     $video_id = $_POST['video_id'];
     $result = Videosurfpro_Video::delete_video_by_id($video_id);
     if ($result) {
-        echo 'Your video was successfully deleted';
+        echo Videosurfpro_Template::success_alert('Your video was successfully deleted');
     } else {
-        echo "Can not delete the video";
+        echo Videosurfpro_Template::warning_alert('Can not delete the video');
     }
     wp_die();
 }
@@ -135,9 +137,9 @@ function videosurfpro_delete_category()
     $category_id = $_POST['category_id'];
     $result = Videosurfpro_Category::delete_category_by_id($category_id);
     if ($result) {
-        echo 'Your category was successfully deleted';
+        echo Videosurfpro_Template::success_alert('Your category was successfully deleted');
     } else {
-        echo "Can not delete the category <br>";
+        echo Videosurfpro_Template::warning_alert('Can not delete the category');
     }
     wp_die();
 }

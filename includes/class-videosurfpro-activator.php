@@ -66,7 +66,8 @@ class Videosurfpro_Activator {
                         [videosurfpro-videos-page]
                         <!-- /wp:shortcode -->";
         $date = date("Y-m-d H:i:s");
-        if (empty($wpdb->get_var("SELECT * FROM `wp_posts` WHERE `post_title` = 'Videos'"))) {
+        $sql = "SELECT * FROM `wp_posts` WHERE `post_title` = 'Videos' AND `post_type` = 'page'";
+        if (empty($wpdb->get_var($sql))) {
             $wpdb->insert($table_name,
                 array(
                     'post_author' => 1,
@@ -75,8 +76,12 @@ class Videosurfpro_Activator {
                     'post_content' => $post_content,
                     'post_title' => 'Videos',
                     'post_name' => 'videos',
+                    'post_type' => 'page'
                 ),
                 array( '%s', '%s', '%s' ));
+
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
         }
 //        else {
 //            $wpdb->update(
@@ -103,7 +108,7 @@ class Videosurfpro_Activator {
             dbDelta($sql);
         }
 
-        $table_name = $wpdb->prefix . ADVERTISEMENT_TABLE;
+        $table_name = $wpdb->prefix . ADVERTISEMENTS_TABLE;
 
         if ($wpdb->get_var("show tables like '$table_name'") != $table_name) {
             $sql = "CREATE TABLE $table_name (

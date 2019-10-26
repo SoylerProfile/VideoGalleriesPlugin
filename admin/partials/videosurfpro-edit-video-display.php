@@ -36,7 +36,9 @@ if(isset($_POST['save_edited_video'])) {
 
 <link rel="stylesheet" type="text/css" href="/wp-content/plugins/videosurfpro/admin/assets/css/bamburgh.min.css">
 
-<div class="container">
+<div class="wrap">
+  <div class="col-md-12">
+  <div class="card">
     <form action="" method="POST">
         <input type="hidden" name="id" value="<?=$video_data[0]->id?>">
         <div class="p-3">
@@ -76,6 +78,8 @@ if(isset($_POST['save_edited_video'])) {
             </div>
         </div>
     </form>
+  </div>
+  </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

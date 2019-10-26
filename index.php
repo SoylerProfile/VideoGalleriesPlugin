@@ -157,4 +157,4 @@ add_filter('init', function ($template) {
 });
 
 // WIDGETS
-add_action('widgets_init', 'videosurfpro_register_widgets');
+//add_action('widgets_init', 'videosurfpro_register_widgets');
