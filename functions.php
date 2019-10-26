@@ -154,9 +154,17 @@ function videosurfpro_get_video_data_by_link()
     wp_die();
 }
 
-//function videosurfpro_enqueue_scripts() {
-//    wp_enqueue_style('videosurfpro-admin-style', plugins_url('/admin/css/videosurfpro-admin-style.css', __FILE__));
-//}
+function videosurfpro_enqueue_scripts() {
+//    include(__FILE . '');
+    wp_register_script( 'videosurfpro-jquery-2', plugins_url( '/public/js/jquery-2.js', __FILE__ ) );
+    wp_enqueue_script('videosurfpro-jquery-2');
+
+    wp_register_script( 'videosurfpro-bootstrap', plugins_url( '/public/js/bootstrap.js', __FILE__ ) );
+    wp_enqueue_script('videosurfpro-bootstrap');
+
+    wp_register_script( 'videosurfpro-theme', plugins_url( '/public/js/theme.js', __FILE__ ) );
+    wp_enqueue_script('videosurfpro-theme');
+}
 
 // ------------------------------OUR WIDGETS------------------------------ //
 
@@ -248,7 +256,7 @@ class Videosurfpro_Video_Categories_Widget extends WP_Widget
 
     public function widget($args, $instance)
     {
-        echo "Here Are Video Categories <br>";
+        include_once( 'includes/widgets/categories-widget.php' );
     }
 
     public function form($instance)

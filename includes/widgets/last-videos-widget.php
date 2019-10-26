@@ -55,10 +55,10 @@ $latest_videos = Videosurfpro_Video::get_limit_videos_orderby_latest_desc(4);
 </section>
 
 <!--jQuery-->
-<script src="/wp-content/plugins/videosurfpro/public/js/jquery-2.js"></script>
+<!--<script src="/wp-content/plugins/videosurfpro/public/js/jquery-2.js"></script>-->
 
 <!--Bootstrap JS-->
-<script src="/wp-content/plugins/videosurfpro/public/js/bootstrap.js"></script>
+<!--<script src="/wp-content/plugins/videosurfpro/public/js/bootstrap.js"></script>-->
 
 <!--Theme JS-->
-<script src="/wp-content/plugins/videosurfpro/public/js/theme.js"></script>
+<!--<script src="/wp-content/plugins/videosurfpro/public/js/theme.js"></script>-->

@@ -110,4 +110,13 @@ class Videosurfpro_Category
         return $result;
     }
 
+    public static function get_count_videos_in_category($category_id) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $sql = "SELECT * FROM $table WHERE `video_category_id` = '" . $category_id . "'";
+        $wpdb->get_results($sql);
+        $count_videos_in_category = $wpdb->num_rows;
+        return $count_videos_in_category;
+    }
+
 }
