@@ -1,4 +1,31 @@
-<!--<title>Videos</title>-->
+<?php
+
+use admin\classes\Videosurfpro_Video;
+use admin\classes\Videosurfpro_Category;
+
+// VIDEO SEARCH
+if(isset($_GET['search_videos'])) {
+    $text = $_GET['text'];
+    $all_videos = Videosurfpro_Video::search_videos($text);
+} else {
+    // VIDEO SORT
+    if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') {
+        $all_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc();
+    } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'last') {
+        $all_videos = Videosurfpro_Video::get_all_videos_orderby_latest_desc();
+    } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') {
+        // тут надо написать метод получения видео с большим рейтингом
+        $all_videos = Videosurfpro_Video::get_all_videos();
+    } else {
+        $all_videos = Videosurfpro_Video::get_all_videos();
+    }
+}
+
+$all_categories = Videosurfpro_Category::get_all_categories();;
+
+$video_on_page = 4;
+
+?>
 
     <!--Bootstrap and Other Vendors-->
     <link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/bootstrap.css">
@@ -18,33 +45,30 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#"><span class="filter_text">All Categories</span><span class="badge"></span></a></li>
-                    <li><a href="#"><span class="filter_text">Art</span><span class="badge">1200</span></a></li>
-                    <li><a href="#"><span class="filter_text">astrology</span><span class="badge">650</span></a></li>
-                    <li><a href="#"><span class="filter_text">biography</span><span class="badge">1200</span></a></li>
-                    <li><a href="#"><span class="filter_text">comedy</span><span class="badge">650</span></a></li>
-                    <li><a href="#"><span class="filter_text">entertainment</span><span class="badge">1200</span></a></li>
-                    <li><a href="#"><span class="filter_text">photoshop</span><span class="badge">650</span></a></li>
-                    <li><a href="#"><span class="filter_text">philosophy</span><span class="badge">1200</span></a></li>
-                    <li><a href="#"><span class="filter_text">nano tube</span><span class="badge">650</span></a></li>
+                    <?php foreach($all_categories as $category) : ?>
+                    <?php $count_videos = Videosurfpro_Category::get_count_videos_in_category($category->id); ?>
+                        <li><a href="#"><span class="filter_text"><?=$category->category_name;?></span><span class="badge"><?=$count_videos;?></span></a></li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
             <!--Post Type Filter-->
-            <div class="btn-group postTypeFilter fleft" data-toggle="buttons">
-                <label class="btn btn-primary active">
-                    <input type="radio" name="postType" id="postType1" checked="checked"> New video
+            <div class="btn-group postTypeFilter fleft" data-toggle="buttons" id="sort_by_button">
+                <label class="btn btn-primary <?php if($_GET['sort_by'] == 'last') echo "active"?>" id="sort_by_latest">
+                    <input type="radio" name="sort_by" value='last' <?php if($_GET['sort_by'] == 'last') echo "checked='checked'"?>> Latest Videos
                 </label>
-                <label class="btn btn-primary">
-                    <input type="radio" name="postType" id="postType2"> Most Views
+                <label class="btn btn-primary <?php if($_GET['sort_by'] == 'views') echo "active"?>" id="sort_by_views">
+                    <input type="radio" name="sort_by" value="views" <?php if($_GET['sort_by'] == 'views') echo "checked='checked'"?>> Most Views
                 </label>
-                <label class="btn btn-primary">
-                    <input type="radio" name="postType" id="postType3"> Most Rates
+                <label class="btn btn-primary <?php if($_GET['sort_by'] == 'rating') echo "active"?>" id="sort_by_rating">
+                    <input type="radio" name="sort_by" value='rating' <?php if($_GET['sort_by'] == 'rating') echo "checked='checked'"?>> Most Rates
                 </label>
             </div>
             <!--Search Form-->
-            <form action="#" role="search" class="search_form fright">
+            <form action="" method="GET" id="search_videos_form" role="search" class="search_form fright">
+                <input type="hidden" name="search_videos">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search Here">
-                    <span class="input-group-addon"><button type="submit"><img src="/wp-content/plugins/videosurfpro/public/images/search.png" alt=""></button></span>
+                    <input type="text" name="text" class="form-control" placeholder="Search Here">
+                    <span class="input-group-addon"><button id='search_videos_button' type="submit"><img src="/wp-content/plugins/videosurfpro/public/images/search.png" alt=""></button></span>
                 </div>
             </form>
         </div>
@@ -57,262 +81,79 @@
             <h3>Videos</h3>
         </div>
         <div class="row media-grid content_video_posts"><div class="jscroll-inner">
-                <article class="col-sm-3 video_post postType3">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/1_002.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
+                <?php if(count($all_videos) > 0) : ?>
+                    <?php foreach($all_videos as $video) : ?>
+                        <?php
+                        $category = Videosurfpro_Category::get_all_category_data_from_db($video->video_category_id);
+                        $category = $category[0];
+                        $category_name = $category->category_name;
+                        ?>
+                        <article class="col-sm-3 video_post postType3">
+                            <div class="inner row m0">
+                                <a href="?videosurfpro_video_id=<?=$video->id?>"><div class="row screencast m0">
+                                        <img src="http://img.youtube.com/vi/<?=$video->video_id?>/maxresdefault.jpg" alt="" class="cast img-responsive">
+                                        <div class="play_btn"></div>
+                                    </div>
+                                </a>
+                                <div class="row m0 post_data">
+                                    <div class="row m0"><a href="?videosurfpro_video_id=<?=$video->id?>" class="post_title"><?=$video->video_name?></a></div>
+                                    <div class="row m0">
+                                        <div class="fleft date"><?=$video->video_created_at;?></div>
+                                    </div>
+                                </div>
+                                <div class="row m0 taxonomy">
+                                    <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt=""><?=$category_name;?></a></div>
+                                    <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt=""><?=$video->video_views;?></a></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Art</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType4">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/2_003.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Philosophy</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType2">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/3.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Comedy</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="col-sm-3 video_post postType3">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/4_002.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Science</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType3">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/1_002.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Art</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType4">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/2_003.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Philosophy</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType2">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/3.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Comedy</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="col-sm-3 video_post postType3">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/4_002.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Science</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType3">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/1_002.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Art</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType4">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/2_003.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Philosophy</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-                <article class="col-sm-3 video_post postType2">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/3.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Comedy</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="col-sm-3 video_post postType3">
-                    <div class="inner row m0">
-                        <a href="#"><div class="row screencast m0">
-                                <img src="/wp-content/plugins/videosurfpro/public/images/4_002.jpg" alt="" class="cast img-responsive">
-                                <div class="play_btn"></div>
-                                <div class="media-length">17:30</div>
-                            </div></a>
-                        <div class="row m0 post_data">
-                            <div class="row m0"><a href="#" class="post_title">Duis aute irure dolor in adipsicing elit</a></div>
-                            <div class="row m0">
-                                <div class="fleft author">by <a href="#">Masum Rana</a></div>
-                                <div class="fleft date">3 August, 2015</div>
-                            </div>
-                        </div>
-                        <div class="row m0 taxonomy">
-                            <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt="">Science</a></div>
-                            <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt="">3,45,346</a></div>
-                        </div>
-                    </div>
-                </article>
+                        </article>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <div>No Videos Found</div>
+                <?php endif; ?>
                 <div class="row m0">
                     <div class="clearfix"></div>
                     <a href="#" class="load_more_videos">Load more videos</a>
                 </div>
-            </div></div>
+            </div>
+        </div>
     </div>
 </section>
 
-<!--jQuery-->
-<!--<script src="/wp-content/plugins/videosurfpro/public/js/jquery-2.js"></script>-->
+<script>
+    // get sort options
+    let videos_latest = $('#sort_by_latest');
+    let videos_views = $('#sort_by_views');
+    let videos_rating = $('#sort_by_rating');
 
-<!--Bootstrap JS-->
-<!--<script src="/wp-content/plugins/videosurfpro/public/js/bootstrap.js"></script>-->
+    let current_url = window.location.href;
+    let new_url = new URL(current_url);
+    new_url.searchParams.delete('sort_by');
 
-<!--Theme JS-->
-<!--<script src="/wp-content/plugins/videosurfpro/public/js/theme.js"></script>-->
+    // do code if an option was changed
+    videos_latest.click(function () {
+        // new_url.searchParams.delete('sort_by');
+        new_url.searchParams.append('sort_by', 'last');
+        location.href = new_url;
+    });
+    videos_views.click(function () {
+        // new_url.searchParams.delete('sort_by');
+        new_url.searchParams.append('sort_by', 'views');
+        location.href = new_url;
+    });
+    videos_rating.click(function () {
+        // new_url.searchParams.delete('sort_by');
+        new_url.searchParams.append('sort_by', 'rating');
+        location.href = new_url;
+    });
+
+</script>
+
+<script>
+    let search_videos_button = $('#search_videos_button');
+    let search_videos_form = $('form#search_videos_form');
+
+    search_videos_button.click(function () {
+        search_videos_form.submit();
+    });
+</script>

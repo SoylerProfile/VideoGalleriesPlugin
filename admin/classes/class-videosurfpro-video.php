@@ -239,7 +239,16 @@ class Videosurfpro_Video
         return $all_latest_videos;
     }
 
-    public static function get_all_videos_orderby_views_desc($limit)
+    public static function get_all_videos_orderby_views_desc()
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $sql = "SELECT * FROM $table ORDER BY `video_views` DESC";
+        $all_orderby_views_videos = $wpdb->get_results($sql);
+        return $all_orderby_views_videos;
+    }
+
+    public static function get_limit_all_videos_orderby_views_desc($limit)
     {
         global $wpdb;
         $table = $wpdb->prefix . VIDEOS_TABLE;
@@ -264,6 +273,15 @@ class Videosurfpro_Video
         $sql = "SELECT * FROM $table WHERE `video_id` = '" . $video_id . "'";
         $result = $wpdb->get_row($sql);
         return $result;
+    }
+
+    public static function search_videos($text) {
+        global $wpdb;
+        $table = $wpdb->prefix . VIDEOS_TABLE;
+        $current_user_id = get_current_user_id();
+        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id AND `video_name` LIKE '%".$text."%'";
+        $all_videos = $wpdb->get_results($sql);
+        return $all_videos;
     }
 
 }
