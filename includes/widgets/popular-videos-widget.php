@@ -3,7 +3,7 @@
 use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
 
-$popular_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc(4);
+$popular_videos = Videosurfpro_Video::get_limit_all_videos_orderby_views_desc(4);
 
 ?>
 
@@ -43,7 +43,7 @@ $popular_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc(4);
                                 </div>
                             </div>
                             <div class="row m0 taxonomy">
-                                <div class="fleft category"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt=""><?=$category_name;?></a></div>
+                                <div class="fleft category"><a href="?videosurfpro_category_id=<?=$category->id?>"><img src="/wp-content/plugins/videosurfpro/public/images/cat.png" alt=""><?=$category_name;?></a></div>
                                 <div class="fright views"><a href="#"><img src="/wp-content/plugins/videosurfpro/public/images/views.png" alt=""><?=$video->video_views;?></a></div>
                             </div>
                         </div>

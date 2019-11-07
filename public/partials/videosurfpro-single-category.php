@@ -1,7 +1,12 @@
+<?php get_header(); ?>
+
 <?php
 
 use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
+
+$category = Videosurfpro_Category::get_all_category_data_from_db($videosurfpro_category_id);
+$category = $category[0];
 
 // VIDEO SEARCH
 if(isset($_GET['search_videos'])) {
@@ -39,13 +44,21 @@ foreach($all_videos as $video) {
         $all_videos_published[] = $video;
 }
 $all_videos = $all_videos_published;
+// оставляем только видео, пренадлежащие текущей категории
+$all_category_videos = array();
+foreach($all_videos as $video) {
+    if($video->video_category_id == $category->id)
+        $all_category_videos[] = $video;
+}
+$all_videos = $all_category_videos;
 
 
+// сделать чтобы выводились только видео, где категория = текущая
 $all_categories = Videosurfpro_Category::get_all_categories();;
 
 $video_on_page = 4;
 
-?>
+//?>
 <script>
     let videos_on_page = <?=$video_on_page?>;
 </script>
@@ -56,12 +69,12 @@ $video_on_page = 4;
     }
 </style>
 
-    <!--Bootstrap and Other Vendors-->
-    <link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/bootstrap.css">
+<!--Bootstrap and Other Vendors-->
+<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/bootstrap.css">
 
-    <!--Theme Styles-->
-    <link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/style.css">
-    <link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/responsive.css">
+<!--Theme Styles-->
+<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/style.css">
+<link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/responsive.css">
 
 <section class="row search_filter">
     <div class="container">
@@ -69,13 +82,12 @@ $video_on_page = 4;
             <!--Category Filter-->
             <div class="btn-group category_filter fleft">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="filter-option pull-left">All Category</span>
+                    <span class="filter-option pull-left"><?=$category->category_name; ?></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#"><span class="filter_text">All Categories</span><span class="badge"></span></a></li>
                     <?php foreach($all_categories as $category) : ?>
-                    <?php $count_videos = Videosurfpro_Category::get_count_videos_in_category($category->id); ?>
+                        <?php $count_videos = Videosurfpro_Category::get_count_videos_in_category($category->id); ?>
                         <li><a href="?videosurfpro_category_id=<?=$category->id?>"><span class="filter_text"><?=$category->category_name;?></span><span class="badge"><?=$count_videos;?></span></a></li>
                     <?php endforeach; ?>
                 </ul>
@@ -94,6 +106,7 @@ $video_on_page = 4;
             </div>
             <!--Search Form-->
             <form action="" method="GET" id="search_videos_form" role="search" class="search_form fright">
+                <input type="hidden" name="videosurfpro_category_id" value="<?=$category->id;?>">
                 <input type="hidden" name="search_videos">
                 <div class="input-group">
                     <input type="text" name="text" class="form-control" placeholder="Search Here">
@@ -202,3 +215,5 @@ $video_on_page = 4;
     console.log(load_more_videos_button);
     console.log(hidden_videos);
 </script>
+
+<?php get_footer(); ?>

@@ -25,6 +25,7 @@ require __DIR__ . '/includes/class-videosurfpro-widget.php';
 
 use includes\Videosurfpro_Shortcode;
 use admin\classes\Videosurfpro_Video;
+use admin\classes\Videosurfpro_Category;
 
 //use WP_Widget;
 
@@ -132,7 +133,7 @@ add_shortcode($shortcode, function ($request) {
 });
 
 /**
- * Create a custom template for single videos
+ * Create a custom template for single video
  */
 
 add_filter('init', function ($template) {
@@ -155,6 +156,27 @@ add_filter('init', function ($template) {
             $html .= $video_iframe;
         }
         include plugin_dir_path(__FILE__) . 'public/partials/videosurfpro-single-video.php';
+        die();
+    }
+});
+
+/**
+ * Create a custom template for single category
+ */
+
+add_filter('init', function ($template) {
+    if (isset($_GET['videosurfpro_category_id'])) {
+        $videosurfpro_category_id = $_GET['videosurfpro_category_id'];
+        $category = Videosurfpro_Category::get_all_category_data_from_db($videosurfpro_category_id);
+        $html = "";
+        if (empty($category)) {
+            $html .= 'Категория с указанным идентификатором не существует';
+        } else{
+            $category = $category[0];
+            $category_name = $category->category_name;
+            $html .= $category_name;
+        }
+        include plugin_dir_path(__FILE__) . 'public/partials/videosurfpro-single-category.php';
         die();
     }
 });

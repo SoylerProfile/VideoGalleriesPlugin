@@ -27,7 +27,7 @@ $all_categories = Videosurfpro_Category::get_all_categories();
                 <li><a href="#"><span class="filter_text">All Categories</span><span class="badge"></span></a></li>
                 <?php foreach($all_categories as $category) : ?>
                     <?php $count_videos = Videosurfpro_Category::get_count_videos_in_category($category->id); ?>
-                    <li><a href="#"><span class="filter_text"><?=$category->category_name?></span><span class="badge"><?=$count_videos?></span></a></li>
+                    <li><a href="?videosurfpro_category_id=<?=$category->id?>"><span class="filter_text"><?=$category->category_name?></span><span class="badge"><?=$count_videos?></span></a></li>
                 <?php endforeach; ?>
             </ul>
         </div>

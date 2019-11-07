@@ -61,6 +61,7 @@ class Videosurfpro_Activator {
         }
 
 
+        // Создаем страницу Все видео
         $table_name = $wpdb->prefix . 'posts';
         $post_content = "<!-- wp:shortcode -->
                         [videosurfpro-videos-page]

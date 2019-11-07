@@ -24,8 +24,9 @@ class Videosurfpro_Category
         $this->category_seo_keywords = $category_seo_keywords;
     }
 
-    public function add_category() {
-        if($this->validate()) {
+    public function add_category()
+    {
+        if ($this->validate()) {
             //нужно отрефакторить, создать класс валидатор
 
             // code if data is ok
@@ -46,23 +47,24 @@ class Videosurfpro_Category
                 ),
                 array('%s', '%s', '%s', '%s', '%s', '%s', '%s')
             );
-            if($result)
+            if ($result)
                 return true;
             else
                 return false;
-        }
-        else {
+        } else {
             // code if data is not ok
             return false;
         }
     }
 
-    private function validate() {
+    private function validate()
+    {
         // validation and return
         return true;
     }
 
-    public static function get_all_categories() {
+    public static function get_all_categories()
+    {
         global $wpdb;
         $table = $wpdb->prefix . CATEGORIES_TABLE;
         $sql = "SELECT * FROM `$table`";
@@ -70,7 +72,8 @@ class Videosurfpro_Category
         return $all_categories;
     }
 
-    public function print_all_data() {
+    public function print_all_data()
+    {
         echo 'video_name - ' . $this->video_name . "<br>";
         echo 'video_slug - ' . $this->video_slug . "<br>";
         echo 'video_description - ' . $this->video_description . "<br>";
@@ -85,7 +88,8 @@ class Videosurfpro_Category
         echo 'video_seo_keywords - ' . $this->video_seo_keywords . "<br>";
     }
 
-    public static function get_all_category_data_from_db($category_id) {
+    public static function get_all_category_data_from_db($category_id)
+    {
         global $wpdb;
         $table = $wpdb->prefix . CATEGORIES_TABLE;
         $sql = "SELECT * FROM $table WHERE `id`=$category_id";
@@ -93,7 +97,8 @@ class Videosurfpro_Category
         return $category_data;
     }
 
-    public static function update_category_data($id, $category_name, $category_slug, $category_description, $category_seo_title, $category_seo_description, $category_seo_keywords) {
+    public static function update_category_data($id, $category_name, $category_slug, $category_description, $category_seo_title, $category_seo_description, $category_seo_keywords)
+    {
         global $wpdb;
         $table = $wpdb->prefix . CATEGORIES_TABLE;
         $result = $wpdb->update($table,
@@ -103,14 +108,16 @@ class Videosurfpro_Category
         return $result;
     }
 
-    public static function delete_category_by_id($category_id) {
+    public static function delete_category_by_id($category_id)
+    {
         global $wpdb;
         $table = $wpdb->prefix . CATEGORIES_TABLE;
         $result = $wpdb->delete($table, array('id' => $category_id));
         return $result;
     }
 
-    public static function get_count_videos_in_category($category_id) {
+    public static function get_count_videos_in_category($category_id)
+    {
         global $wpdb;
         $table = $wpdb->prefix . VIDEOS_TABLE;
         $sql = "SELECT * FROM $table WHERE `video_category_id` = '" . $category_id . "'";
