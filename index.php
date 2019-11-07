@@ -143,7 +143,9 @@ add_filter('init', function ($template) {
         $html = "";
         if (empty($video)) {
             $html .= 'Видео с указанным идентификатором не существует';
-        } else {
+        } elseif($video[0]->video_is_published == 0) {
+            $html .= 'Данное видео скрыто администратором';
+        } else{
             $video = $video[0];
             $video_iframe = '
                 <div>

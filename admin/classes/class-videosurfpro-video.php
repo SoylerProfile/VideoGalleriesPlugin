@@ -275,11 +275,11 @@ class Videosurfpro_Video
         return $result;
     }
 
-    public static function search_videos($text) {
+    public static function search_videos($text, $sort_by = 'video_views') {
         global $wpdb;
         $table = $wpdb->prefix . VIDEOS_TABLE;
         $current_user_id = get_current_user_id();
-        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id AND `video_name` LIKE '%".$text."%'";
+        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id AND `video_name` LIKE '%".$text."%' ORDER BY `$sort_by` DESC";
         $all_videos = $wpdb->get_results($sql);
         return $all_videos;
     }

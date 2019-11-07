@@ -3,10 +3,23 @@
 use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
 
+// нужно в ALl видеос оставить только те видео, которые is_published!
+
 // VIDEO SEARCH
 if(isset($_GET['search_videos'])) {
     $text = $_GET['text'];
     $all_videos = Videosurfpro_Video::search_videos($text);
+    // написать сортировку для видео из поиска
+    // ...
+    if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') {
+        $all_videos = Videosurfpro_Video::search_videos($text, 'video_views');
+    } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'last') {
+        $all_videos = Videosurfpro_Video::search_videos($text, 'video_created_at');
+    } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') {
+        // тут надо написать метод получения видео с большим рейтингом
+        $all_videos = Videosurfpro_Video::search_videos($text);
+//        $all_videos = Videosurfpro_Video::get_all_videos();
+    }
 } else {
     // VIDEO SORT
     if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') {
@@ -21,11 +34,29 @@ if(isset($_GET['search_videos'])) {
     }
 }
 
+// оставляем только опубликованные видео
+$all_videos_published = array();
+foreach($all_videos as $video) {
+    if($video->video_is_published == 1)
+        $all_videos_published[] = $video;
+}
+$all_videos = $all_videos_published;
+
+
 $all_categories = Videosurfpro_Category::get_all_categories();;
 
 $video_on_page = 4;
 
 ?>
+<script>
+    let videos_on_page = <?=$video_on_page?>;
+</script>
+
+<style>
+    .invisible-video {
+        display: none;
+    }
+</style>
 
     <!--Bootstrap and Other Vendors-->
     <link rel="stylesheet" href="/wp-content/plugins/videosurfpro/public/css/bootstrap.css">
@@ -53,14 +84,14 @@ $video_on_page = 4;
             </div>
             <!--Post Type Filter-->
             <div class="btn-group postTypeFilter fleft" data-toggle="buttons" id="sort_by_button">
-                <label class="btn btn-primary <?php if($_GET['sort_by'] == 'last') echo "active"?>" id="sort_by_latest">
-                    <input type="radio" name="sort_by" value='last' <?php if($_GET['sort_by'] == 'last') echo "checked='checked'"?>> Latest Videos
+                <label class="btn btn-primary <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'last') echo "active"?>" id="sort_by_latest">
+                    <input type="radio" name="sort_by" value='last' <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'last') echo "checked='checked'"?>> Latest Videos
                 </label>
-                <label class="btn btn-primary <?php if($_GET['sort_by'] == 'views') echo "active"?>" id="sort_by_views">
-                    <input type="radio" name="sort_by" value="views" <?php if($_GET['sort_by'] == 'views') echo "checked='checked'"?>> Most Views
+                <label class="btn btn-primary <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') echo "active"?>" id="sort_by_views">
+                    <input type="radio" name="sort_by" value="views" <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') echo "checked='checked'"?>> Most Views
                 </label>
-                <label class="btn btn-primary <?php if($_GET['sort_by'] == 'rating') echo "active"?>" id="sort_by_rating">
-                    <input type="radio" name="sort_by" value='rating' <?php if($_GET['sort_by'] == 'rating') echo "checked='checked'"?>> Most Rates
+                <label class="btn btn-primary <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') echo "active"?>" id="sort_by_rating">
+                    <input type="radio" name="sort_by" value='rating' <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') echo "checked='checked'"?>> Most Rates
                 </label>
             </div>
             <!--Search Form-->
@@ -82,13 +113,16 @@ $video_on_page = 4;
         </div>
         <div class="row media-grid content_video_posts"><div class="jscroll-inner">
                 <?php if(count($all_videos) > 0) : ?>
+                    <?php $current_video_number = 0;?>
                     <?php foreach($all_videos as $video) : ?>
                         <?php
+                        $current_video_number++;
+
                         $category = Videosurfpro_Category::get_all_category_data_from_db($video->video_category_id);
                         $category = $category[0];
                         $category_name = $category->category_name;
                         ?>
-                        <article class="col-sm-3 video_post postType3">
+                        <article class="col-sm-3 video_post postType3 <?php if($current_video_number > $video_on_page) echo 'invisible-video' ?>">
                             <div class="inner row m0">
                                 <a href="?videosurfpro_video_id=<?=$video->id?>"><div class="row screencast m0">
                                         <img src="http://img.youtube.com/vi/<?=$video->video_id?>/maxresdefault.jpg" alt="" class="cast img-responsive">
@@ -113,7 +147,7 @@ $video_on_page = 4;
                 <?php endif; ?>
                 <div class="row m0">
                     <div class="clearfix"></div>
-                    <a href="#" class="load_more_videos">Load more videos</a>
+                    <a href="#" id="load_more_videos_button" class="load_more_videos">Load more videos</a>
                 </div>
             </div>
         </div>
@@ -156,4 +190,17 @@ $video_on_page = 4;
     search_videos_button.click(function () {
         search_videos_form.submit();
     });
+</script>
+
+<script>
+    let load_more_videos_button = $('#load_more_videos_button');
+    load_more_videos_button.click(function(e) {
+        e.preventDefault();
+        let hidden_videos = $('.invisible-video');
+        for(let i = 0; i < videos_on_page; i++) {
+            hidden_videos[i].classList.remove('invisible-video');
+        }
+    });
+    console.log(load_more_videos_button);
+    console.log(hidden_videos);
 </script>
