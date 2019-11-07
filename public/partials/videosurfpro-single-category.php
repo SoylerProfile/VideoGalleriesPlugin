@@ -5,8 +5,8 @@
 use admin\classes\Videosurfpro_Video;
 use admin\classes\Videosurfpro_Category;
 
-$category = Videosurfpro_Category::get_all_category_data_from_db($videosurfpro_category_id);
-$category = $category[0];
+$current_category = Videosurfpro_Category::get_all_category_data_from_db($videosurfpro_category_id);
+$current_category = $current_category[0];
 
 // VIDEO SEARCH
 if(isset($_GET['search_videos'])) {
@@ -47,7 +47,7 @@ $all_videos = $all_videos_published;
 // оставляем только видео, пренадлежащие текущей категории
 $all_category_videos = array();
 foreach($all_videos as $video) {
-    if($video->video_category_id == $category->id)
+    if($video->video_category_id == $current_category->id)
         $all_category_videos[] = $video;
 }
 $all_videos = $all_category_videos;
@@ -82,7 +82,7 @@ $video_on_page = 4;
             <!--Category Filter-->
             <div class="btn-group category_filter fleft">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="filter-option pull-left"><?=$category->category_name; ?></span>
+                    <span class="filter-option pull-left"><?=$current_category->category_name; ?></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
@@ -106,7 +106,8 @@ $video_on_page = 4;
             </div>
             <!--Search Form-->
             <form action="" method="GET" id="search_videos_form" role="search" class="search_form fright">
-                <input type="hidden" name="videosurfpro_category_id" value="<?=$category->id;?>">
+                <?=$current_category->id;?>
+                <input type="hidden" name="videosurfpro_category_id" value="<?=$current_category->id;?>">
                 <input type="hidden" name="search_videos">
                 <div class="input-group">
                     <input type="text" name="text" class="form-control" placeholder="Search Here">
