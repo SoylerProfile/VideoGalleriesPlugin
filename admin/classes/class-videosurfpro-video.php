@@ -105,8 +105,7 @@ class Videosurfpro_Video
     {
         global $wpdb;
         $table = $wpdb->prefix . VIDEOS_TABLE;
-        $current_user_id = get_current_user_id();
-        $sql = "SELECT * FROM `$table` WHERE `video_author_id` = $current_user_id";
+        $sql = "SELECT * FROM `$table`";
         $all_videos = $wpdb->get_results($sql);
         return $all_videos;
     }

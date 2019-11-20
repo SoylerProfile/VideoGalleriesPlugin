@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: VideoSurfPro
-Plugin URI: http://videosurfpro.com
+Plugin URI: https://github.com/SoylerProfile
 Description: The best for Videos
 Version: 1.0
-Author: Fuze
-Author URI: http://fuze.com
+Author: Soyler
+Author URI: https://github.com/SoylerProfile
 */
 
 // OUR
@@ -83,52 +83,6 @@ add_shortcode($shortcode, function ($request) {
     } else {
         // GET DATA
         include_once( 'public/partials/videosurfpro-all-videos-display.php' );
-//        if (isset($_POST['videos_sortby_views'])) {
-//            $all_orderby_views_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc();
-//            $videos = $all_orderby_views_videos;
-//
-//        } else if (isset($_POST['videos_sortby_latest'])) {
-//            $all_orderby_latest_videos = Videosurfpro_Video::get_all_videos_orderby_latest_desc();
-//            $videos = $all_orderby_latest_videos;
-//        }
-//        else {
-//            $all_videos = Videosurfpro_Video::get_all_videos();
-//            $videos = $all_videos;
-//        }
-//        $html = "";
-//        $content = "";
-//        $domain = get_site_url();
-//        $videos_sort_div = "
-//        <div style='display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px; max-width: 100vw;'>
-//            <form action='' method='POST'>
-//                <input type='submit' name='videos_sortby_views' value='Sort by Views'>
-//            </form>
-//            <form action='' method='POST'>
-//                <input type='submit' name='videos_sortby_latest' value='Latest Videos'>
-//            </form>
-//        </div>
-//    ";
-//        $content .= $videos_sort_div;
-//
-//        $latest_videos = "<div style='margin:0; display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px;'>";
-//        // INSERT DATA
-//        foreach ($videos as $video) {
-//            if ($video->video_is_published == true) {
-////                if (Videosurfpro_Video::is_exists_youtube_video_thumbnail($video->video_id) == true) {
-//                    $latest_videos .= '
-//                        <a href="' . $domain . '/?videosurfpro_video_id=' . $video->id . '">
-//                            <img src="http://img.youtube.com/vi/' . $video->video_id . '/mqdefault.jpg" />
-//                        </a>
-//                    ';
-////                }
-//            }
-//        }
-//        $latest_videos .= '</div';
-//
-//        // RETURN DATA
-//        $content .= $latest_videos;
-//        $html .= $content;
-//        return $html;
     }
 });
 
@@ -183,3 +137,39 @@ add_filter('init', function ($template) {
 
 // WIDGETS
 add_action('widgets_init', 'videosurfpro_register_widgets');
+
+
+add_filter('template_include', 'videos_template');
+function videos_template( $template ) {
+
+    # аналог второго способа
+    // если это страница со слагом portfolio, используем файл шаблона page-portfolio.php
+    // используем условный тег is_page()
+    if( is_page('videos') ){
+        return wp_normalize_path( WP_PLUGIN_DIR ) . '/videosurfpro/public/partials/videosurfpro-all-videos-display.php';
+    }
+//
+//    # шаблон для группы рубрик
+//    // этот пример будет использовать файл из папки темы tpl_special-cats.php,
+//    // как шаблон для рубрик с ID 9, названием "Без рубрики" и слагом "php"
+//    if( is_category( array( 9, 'Без рубрики', 'php') ) ){
+//        return get_stylesheet_directory() . '/tpl_special-cats.php';
+//    }
+//
+//    # шаблон для записи по ID
+//    // файл шаблона расположен в папке плагина /my-plugin/site-template.php
+//    global $post;
+//    if( $post->ID == 12 ){
+//        return wp_normalize_path( WP_PLUGIN_DIR ) . '/my-plugin/site-template.php';
+//    }
+//
+//    # шаблон для страниц произвольного типа "book"
+//    // предполагается, что файл шаблона book-tpl.php лежит в папке темы
+//    global $post;
+//    if( $post->post_type == 'book' ){
+//        return get_stylesheet_directory() . '/book-tpl.php';
+//    }
+
+    return $template;
+
+}

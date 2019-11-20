@@ -1,3 +1,5 @@
+<?php get_header(); ?>
+
 <?php
 
 use admin\classes\Videosurfpro_Video;
@@ -7,16 +9,10 @@ use admin\classes\Videosurfpro_Category;
 if(isset($_GET['search_videos'])) {
     $text = $_GET['text'];
     $all_videos = Videosurfpro_Video::search_videos($text);
-    // написать сортировку для видео из поиска
-    // ...
     if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') {
         $all_videos = Videosurfpro_Video::search_videos($text, 'video_views');
     } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'last') {
         $all_videos = Videosurfpro_Video::search_videos($text, 'video_created_at');
-    } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') {
-        // тут надо написать метод получения видео с большим рейтингом
-        $all_videos = Videosurfpro_Video::search_videos($text);
-//        $all_videos = Videosurfpro_Video::get_all_videos();
     }
 } else {
     // VIDEO SORT
@@ -24,13 +20,11 @@ if(isset($_GET['search_videos'])) {
         $all_videos = Videosurfpro_Video::get_all_videos_orderby_views_desc();
     } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'last') {
         $all_videos = Videosurfpro_Video::get_all_videos_orderby_latest_desc();
-    } else if (isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') {
-        // тут надо написать метод получения видео с большим рейтингом
-        $all_videos = Videosurfpro_Video::get_all_videos();
-    } else {
-        $all_videos = Videosurfpro_Video::get_all_videos();
     }
 }
+
+if(empty($all_videos))
+    $all_videos = Videosurfpro_Video::get_all_videos();
 
 // оставляем только опубликованные видео
 $all_videos_published = array();
@@ -69,11 +63,11 @@ $video_on_page = 4;
             <!--Category Filter-->
             <div class="btn-group category_filter fleft">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="filter-option pull-left">All Category</span>
+                    <span class="filter-option pull-left">ALL CATEGORIES</span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#"><span class="filter_text">All Categories</span><span class="badge"></span></a></li>
+                    <li><a href="#"><span class="filter_text">ALL CATEGORIES</span><span class="badge"></span></a></li>
                     <?php foreach($all_categories as $category) : ?>
                     <?php $count_videos = Videosurfpro_Category::get_count_videos_in_category($category->id); ?>
                         <li><a href="?videosurfpro_category_id=<?=$category->id?>"><span class="filter_text"><?=$category->category_name;?></span><span class="badge"><?=$count_videos;?></span></a></li>
@@ -87,9 +81,6 @@ $video_on_page = 4;
                 </label>
                 <label class="btn btn-primary <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') echo "active"?>" id="sort_by_views">
                     <input type="radio" name="sort_by" value="views" <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'views') echo "checked='checked'"?>> Most Views
-                </label>
-                <label class="btn btn-primary <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') echo "active"?>" id="sort_by_rating">
-                    <input type="radio" name="sort_by" value='rating' <?php if(isset($_GET['sort_by']) && $_GET['sort_by'] == 'rating') echo "checked='checked'"?>> Most Rates
                 </label>
             </div>
             <!--Search Form-->
@@ -143,9 +134,9 @@ $video_on_page = 4;
                 <?php else : ?>
                     <div>No Videos Found</div>
                 <?php endif; ?>
-                <div class="row m0">
+                <div class="row m0" id="load_more_videos_button">
                     <div class="clearfix"></div>
-                    <a href="#" id="load_more_videos_button" class="load_more_videos">Load more videos</a>
+                    <a href="#" class="load_more_videos">Load more videos</a>
                 </div>
             </div>
         </div>
@@ -153,10 +144,18 @@ $video_on_page = 4;
 </section>
 
 <script>
+    window.onload = function () {
+        let hidden_videos = $('.invisible-video');
+        if(hidden_videos.length <= 0) {
+            load_more_videos_button[0].style.display = 'none';
+        }
+    };
+</script>
+
+<script>
     // get sort options
     let videos_latest = $('#sort_by_latest');
     let videos_views = $('#sort_by_views');
-    let videos_rating = $('#sort_by_rating');
 
     let current_url = window.location.href;
     let new_url = new URL(current_url);
@@ -164,18 +163,11 @@ $video_on_page = 4;
 
     // do code if an option was changed
     videos_latest.click(function () {
-        // new_url.searchParams.delete('sort_by');
         new_url.searchParams.append('sort_by', 'last');
         location.href = new_url;
     });
     videos_views.click(function () {
-        // new_url.searchParams.delete('sort_by');
         new_url.searchParams.append('sort_by', 'views');
-        location.href = new_url;
-    });
-    videos_rating.click(function () {
-        // new_url.searchParams.delete('sort_by');
-        new_url.searchParams.append('sort_by', 'rating');
         location.href = new_url;
     });
 
@@ -191,14 +183,22 @@ $video_on_page = 4;
 </script>
 
 <script>
-    let load_more_videos_button = $('#load_more_videos_button');
+    var load_more_videos_button = $('#load_more_videos_button');
     load_more_videos_button.click(function(e) {
         e.preventDefault();
         let hidden_videos = $('.invisible-video');
-        for(let i = 0; i < videos_on_page; i++) {
-            hidden_videos[i].classList.remove('invisible-video');
+        if(hidden_videos.length > 0) {
+            if(hidden_videos.length - videos_on_page < 1) {
+                load_more_videos_button[0].style.display = 'none';
+            }
+            for(let i = 0; i < videos_on_page; i++) {
+                hidden_videos[i].classList.remove('invisible-video');
+            }
+        }
+        else {
+            load_more_videos_button[0].style.display = 'none';
         }
     });
-    console.log(load_more_videos_button);
-    console.log(hidden_videos);
 </script>
+
+<?php get_footer(); ?>
